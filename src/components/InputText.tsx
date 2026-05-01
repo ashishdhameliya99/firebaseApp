@@ -19,7 +19,7 @@ const InputText = ({
   leftIconSource,
   rightIconSource,
   contextmenu,
-  autoCapital,
+  autoCapitalize,
 }: Props) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -37,7 +37,7 @@ const InputText = ({
         onChangeText={onChange}
         style={styles.input}
         contextMenuHidden={contextmenu}
-        autoCapitalize={autoCapital ?? 'none'}
+        autoCapitalize={autoCapitalize}
       />
       {secureTextEntry ? (
         <TouchableOpacity onPress={toggleVisibility}>

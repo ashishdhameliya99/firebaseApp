@@ -1,34 +1,42 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ActivityIndicator, Button } from 'react-native';
-import auth, {
-  AppleAuthProvider,
-  getAuth,
-  signInWithCredential,
-} from '@react-native-firebase/auth';
-import InputField from '../components/InputText';
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import auth, { GoogleAuthProvider } from '@react-native-firebase/auth';
 
+import InputField from '../components/InputText';
+import { hp, wp } from '../constants/responsiveUI';
 import { color } from '../utils/color';
 import { icon } from '../assets/icons/icon';
-import { hp, wp } from '../constants/responsiveUI';
-import CustomButton from '../components/CustomButton';
 import Toast from 'react-native-toast-message';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
-import appleAuth, {
-  AppleButton,
-} from '@invertase/react-native-apple-authentication';
+import { routes } from '../constants/routes';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import SwipeButton from 'rn-swipe-button';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+import appleAuth from '@invertase/react-native-apple-authentication';
+import { AppleAuthProvider } from '@react-native-firebase/auth';
+import fontFamilies from '../assets/fonts/font';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [Loading, setLoading] = useState(false);
+
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+
   const handleLogin = async () => {
     if (!email || !password) {
       Toast.show({
         type: 'error',
         text1: 'Required Fields',
-        text2: 'Please enter both email and password',
+        text2: 'Please enter email & password',
       });
       return;
     }
@@ -41,62 +49,72 @@ const Login = () => {
       Toast.show({
         type: 'success',
         text1: 'Welcome back!',
-        text2: 'Logged in successfully',
       });
 
-      setEmail('');
-      setPassword('');
-      navigation.navigate('StackNavigation', { screen: 'Home' });
-    } catch (err: any) {
-      let errorMsg = 'Invalid email or password';
-
-      if (err.code === 'auth/user-not-found') {
-        errorMsg = 'No user found with this email';
-      } else if (err.code === 'auth/wrong-password') {
-        errorMsg = 'Incorrect password';
-      } else if (err.code === 'auth/invalid-email') {
-        errorMsg = 'Email address is badly formatted';
-      }
-
+      navigation.replace(routes.home);
+    } catch {
       Toast.show({
         type: 'error',
         text1: 'Login Failed',
-        text2: errorMsg,
       });
-      console.log(err);
     } finally {
       setLoading(false);
     }
   };
-  async function onAppleButtonPress() {
-    const appleAuthRequestResponse = await appleAuth.performRequest({
-      requestedOperation: appleAuth.Operation.LOGIN,
 
-      requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
-    });
+  const onGooglePress = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
 
-    if (!appleAuthRequestResponse.identityToken) {
-      throw new Error('Apple Sign-In failed - no identify token returned');
+      if (userInfo.type === 'success' && userInfo.data.idToken) {
+        const credential = GoogleAuthProvider.credential(userInfo.data.idToken);
+
+        await auth().signInWithCredential(credential);
+
+        navigation.replace(routes.home);
+      }
+    } catch (e) {
+      console.error('Google Sign-In Error:', e);
     }
+  };
 
-    const { identityToken, nonce } = appleAuthRequestResponse;
-    const appleCredential = AppleAuthProvider.credential(identityToken, nonce);
+  const onApplePress = async () => {
+    try {
+      const response = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL],
+      });
 
-    return signInWithCredential(getAuth(), appleCredential);
-  }
+      if (!response.identityToken) return;
+
+      const credential = AppleAuthProvider.credential(
+        response.identityToken,
+        response.nonce,
+      );
+
+      await auth().signInWithCredential(credential);
+
+      navigation.replace(routes.home);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.label}>Email</Text>
       <InputField
-        placeholder="Email"
+        placeholder="Enter your email"
         value={email}
         onChange={setEmail}
         leftIconSource={icon.email}
-        autoCapital="none"
+        contextmenu={true}
       />
 
+      <Text style={styles.label}>Password</Text>
       <InputField
-        placeholder="Password"
+        placeholder="Enter your password"
         secureTextEntry
         value={password}
         onChange={setPassword}
@@ -105,30 +123,40 @@ const Login = () => {
       />
 
       {Loading ? (
-        <ActivityIndicator size="large" color="#cacbccff" />
+        <ActivityIndicator size="large" color="#ccc" />
       ) : (
-        <CustomButton title="Login" onPress={handleLogin} />
+        <SwipeButton
+          title="Swipe to Login"
+          onSwipeSuccess={handleLogin}
+          railBackgroundColor={color.orange}
+          railStyles={styles.thumbButton}
+          thumbIconBackgroundColor={color.white}
+          titleColor="#ffffff"
+          titleStyles={styles.titleText}
+          thumbIconImageSource={icon.rightArrow}
+          thumbIconBorderColor={color.darkOrange}
+          thumbIconStyles={styles.thumbIcon}
+          // disableResetOnTap={true}
+        />
       )}
 
-      <AppleButton
-        buttonStyle={AppleButton.Style.BLACK}
-        buttonType={AppleButton.Type.CONTINUE}
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{
-          width: '100%',
-          height: 50,
-          marginVertical: 10,
-        }}
-        onPress={() => onAppleButtonPress()}
-      />
-      <Button
-        title="Google Sign-In"
-        onPress={() =>
-          onGoogleButtonPress().then(() =>
-            console.log('Signed in with Google!'),
-          )
-        }
-      />
+      <View style={styles.dividerRow}>
+        <View style={styles.line} />
+        <Text style={styles.or}>Or continue with</Text>
+        <View style={styles.line} />
+      </View>
+
+      <View style={styles.socialRow}>
+        <TouchableOpacity style={styles.socialBtn} onPress={onGooglePress}>
+          <Image source={icon.google} style={styles.icon} />
+          <Text style={styles.titleText}>Google</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.socialBtn} onPress={onApplePress}>
+          <Image source={icon.apple} style={styles.icon} />
+          <Text style={styles.titleText}>Apple</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -143,5 +171,64 @@ const styles = StyleSheet.create({
     backgroundColor: color.white,
     paddingTop: hp(20),
     paddingHorizontal: wp(20),
+  },
+
+  label: {
+    marginTop: 10,
+    marginBottom: 5,
+    fontWeight: '500',
+  },
+
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 25,
+  },
+
+  line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#ddd',
+  },
+
+  or: {
+    marginHorizontal: 10,
+    color: color.placeholderText,
+    fontFamily: fontFamilies.poppins.Regular,
+  },
+
+  socialRow: {
+    flexDirection: 'row',
+    marginTop: hp(15),
+  },
+
+  socialBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: wp(10),
+    justifyContent: 'center',
+    backgroundColor: '#F2F2F2',
+    padding: hp(14),
+    marginHorizontal: wp(5),
+    borderRadius: wp(30),
+    alignItems: 'center',
+  },
+  titleText: {
+    fontFamily: fontFamilies.poppins.Regular,
+  },
+  icon: {
+    height: wp(20),
+    width: wp(20),
+  },
+  thumbButton: {
+    backgroundColor: '#eeeeeeff',
+    borderWidth: 0,
+  },
+  swiperIcon: {
+    borderWidth: 0,
+  },
+  thumbIcon: {
+    height: 15,
+    width: 10,
   },
 });

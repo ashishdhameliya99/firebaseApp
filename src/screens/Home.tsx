@@ -9,11 +9,13 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { routes } from '../constants/routes';
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const user = auth().currentUser;
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+
   const handleLogout = async () => {
     setLoading(true);
     try {
@@ -26,7 +28,7 @@ const Home = () => {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: 'Login' }],
+          routes: [{ name: routes.tab }],
         }),
       );
     } catch {
@@ -46,11 +48,6 @@ const Home = () => {
         <Text style={styles.welcome}>Welcome Back!</Text>
 
         <View style={styles.infoSection}>
-          <Text style={styles.label}>Name:</Text>
-          <Text style={styles.value}>{user?.displayName || 'User'}</Text>
-        </View>
-
-        <View style={styles.infoSection}>
           <Text style={styles.label}>Email:</Text>
           <Text style={styles.value}>{user?.email}</Text>
         </View>
@@ -59,7 +56,7 @@ const Home = () => {
           <ActivityIndicator
             size="small"
             color="#FF3B30"
-            style={{ marginTop: 20 }}
+            style={styles.loaderIcon}
           />
         ) : (
           <CustomButton
@@ -112,6 +109,9 @@ const styles = StyleSheet.create({
   },
   logoutBtn: {
     backgroundColor: '#FF3B30',
+    marginTop: 20,
+  },
+  loaderIcon: {
     marginTop: 20,
   },
 });

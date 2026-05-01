@@ -14,7 +14,7 @@ export interface Props {
   rightIconSource?: ImageProps;
   isPasswordVisible?: boolean;
   contextmenu?: boolean;
-  autoCapital?: 'none' | 'sentences' | 'words' | 'characters' | 'undefined';
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
 }
 export interface CustomButtonProps extends TouchableOpacityProps {
   title: string;

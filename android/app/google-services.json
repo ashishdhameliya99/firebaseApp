@@ -12,7 +12,20 @@
           "package_name": "com.firebaseapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1021574425223-pgh2n6ojmaiit3484obchvq1fhpb6cj9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firebaseapp",
+            "certificate_hash": "a9f035013dc50d661e6b9eb8eda90a192fa98787"
+          }
+        },
+        {
+          "client_id": "1021574425223-j7e9arqqmu85utu85q5cb44279gso0p5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAS-xWwnFHhaT3JmYxdudBV1c5V5ddlh-E"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021574425223-j7e9arqqmu85utu85q5cb44279gso0p5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1021574425223-l6a8318fb9nkogq2hjmf6ev9063icusf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.FirebaseApp"
+              }
+            }
+          ]
         }
       }
     }
