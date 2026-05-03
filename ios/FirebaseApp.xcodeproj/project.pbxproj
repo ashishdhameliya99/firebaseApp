@@ -9,13 +9,13 @@
 /* Begin PBXBuildFile section */
 		04BD8A952FA21C4F006A4E90 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04BD8A942FA21C4F006A4E90 /* GoogleService-Info.plist */; };
 		08BB9AC5AB7849A9B06068A3 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0D18DC0288C47AE9C4BCC6F /* Poppins-SemiBold.ttf */; };
-		0C80B921A6F3F58F76C31292 /* libPods-FirebaseApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-FirebaseApp.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		47F5456DB6E44EA0B786FF39 /* font.ts in Resources */ = {isa = PBXBuildFile; fileRef = 0C66BA32924F4899A49154B5 /* font.ts */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9F3D0B07A98543828D398788 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96AE84F19D0B4D9386AC98B3 /* Poppins-Medium.ttf */; };
 		9FEF9C81A43A4890A216BE41 /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC1093A1C9B84A3E9FF16468 /* Poppins-Black.ttf */; };
+		B3BB9AB232EE3F971A188476 /* Pods_FirebaseApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB381D7C919C7F8EAB801D40 /* Pods_FirebaseApp.framework */; };
 		B9E80A862903415598BEB3AC /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D520F42544511954434BB /* Poppins-Bold.ttf */; };
 		BFB609E0D5234ECB82DF1944 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 699ED45422EB46F2ACF0DFE1 /* Poppins-Regular.ttf */; };
 		DB39719AF3DE4DAA8994FEDB /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1550FF3327AA4EDD9B407B6E /* Poppins-ExtraBold.ttf */; };
@@ -23,23 +23,24 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04057EE72FA731250040A378 /* FirebaseAppDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FirebaseAppDebug.entitlements; path = FirebaseApp/FirebaseAppDebug.entitlements; sourceTree = "<group>"; };
 		04BD8A942FA21C4F006A4E90 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		0C66BA32924F4899A49154B5 /* font.ts */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = font.ts; path = ../src/assets/fonts/font.ts; sourceTree = "<group>"; };
-		0D8D520F42544511954434BB /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
+		0C66BA32924F4899A49154B5 /* font.ts */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = font.ts; path = ../src/assets/fonts/font.ts; sourceTree = "<group>"; };
+		0D8D520F42544511954434BB /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* FirebaseApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirebaseApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = FirebaseApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FirebaseApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = FirebaseApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		1550FF3327AA4EDD9B407B6E /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBold.ttf"; path = "../src/assets/fonts/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
-		3B4392A12AC88292D35C810B /* Pods-FirebaseApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirebaseApp.debug.xcconfig"; path = "Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-FirebaseApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirebaseApp.release.xcconfig"; path = "Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp.release.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-FirebaseApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FirebaseApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		699ED45422EB46F2ACF0DFE1 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		1550FF3327AA4EDD9B407B6E /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBold.ttf"; path = "../src/assets/fonts/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
+		351FE6A891EFDD77D5A7EC4A /* Pods-FirebaseApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirebaseApp.release.xcconfig"; path = "Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp.release.xcconfig"; sourceTree = "<group>"; };
+		699ED45422EB46F2ACF0DFE1 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = FirebaseApp/AppDelegate.swift; sourceTree = "<group>"; };
+		791F9A77C373C12A0CC064D6 /* Pods-FirebaseApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirebaseApp.debug.xcconfig"; path = "Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FirebaseApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		96AE84F19D0B4D9386AC98B3 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
-		AC1093A1C9B84A3E9FF16468 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
-		B0D18DC0288C47AE9C4BCC6F /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
+		96AE84F19D0B4D9386AC98B3 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
+		AB381D7C919C7F8EAB801D40 /* Pods_FirebaseApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FirebaseApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC1093A1C9B84A3E9FF16468 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
+		B0D18DC0288C47AE9C4BCC6F /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -48,7 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-FirebaseApp.a in Frameworks */,
+				B3BB9AB232EE3F971A188476 /* Pods_FirebaseApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,6 +59,7 @@
 		13B07FAE1A68108700A75B9A /* FirebaseApp */ = {
 			isa = PBXGroup;
 			children = (
+				04057EE72FA731250040A378 /* FirebaseAppDebug.entitlements */,
 				04BD8A942FA21C4F006A4E90 /* GoogleService-Info.plist */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
@@ -72,7 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-FirebaseApp.a */,
+				AB381D7C919C7F8EAB801D40 /* Pods_FirebaseApp.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -89,7 +91,6 @@
 				0C66BA32924F4899A49154B5 /* font.ts */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -125,8 +126,8 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-FirebaseApp.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-FirebaseApp.release.xcconfig */,
+				791F9A77C373C12A0CC064D6 /* Pods-FirebaseApp.debug.xcconfig */,
+				351FE6A891EFDD77D5A7EC4A /* Pods-FirebaseApp.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -138,14 +139,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "FirebaseApp" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				94D7A36FDC931CC212859084 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
-				E55610A7544B09DE27C70EB2 /* [CP-User] [RNFB] Core Configuration */,
+				24E105E02436235641A87A33 /* [CP] Embed Pods Frameworks */,
+				660BA179F5EFF714530916E5 /* [CP] Copy Pods Resources */,
+				BF7A8A9510075990CD770078 /* [CP-User] [RNFB] Core Configuration */,
 			);
 			buildRules = (
 			);
@@ -228,7 +229,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"\\\"$WITH_ENVIRONMENT\\\" \\\"$REACT_NATIVE_XCODE\\\"\"\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
+		24E105E02436235641A87A33 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -245,7 +246,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		660BA179F5EFF714530916E5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		94D7A36FDC931CC212859084 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -267,24 +285,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E55610A7544B09DE27C70EB2 /* [CP-User] [RNFB] Core Configuration */ = {
+		BF7A8A9510075990CD770078 /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -313,10 +314,11 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-FirebaseApp.debug.xcconfig */;
+			baseConfigurationReference = 791F9A77C373C12A0CC064D6 /* Pods-FirebaseApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FirebaseApp/FirebaseAppDebug.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = FirebaseApp/Info.plist;
@@ -343,7 +345,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-FirebaseApp.release.xcconfig */;
+			baseConfigurationReference = 351FE6A891EFDD77D5A7EC4A /* Pods-FirebaseApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -418,6 +420,21 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_ROOT}/ReactCommon",
+					"${PODS_ROOT}/ReactCommon/react/nativemodule/core",
+					"${PODS_ROOT}/React-runtimeexecutor",
+					"${PODS_ROOT}/React-runtimeexecutor/platform/ios",
+					"${PODS_ROOT}/ReactCommon-Samples",
+					"${PODS_ROOT}/ReactCommon-Samples/platform/ios",
+					"${PODS_ROOT}/React-Fabric/react/renderer/components/view/platform/cxx",
+					"${PODS_ROOT}/React-NativeModulesApple",
+					"${PODS_ROOT}/React-graphics",
+					"${PODS_ROOT}/React-graphics/react/renderer/graphics/platform/ios",
+					"${PODS_ROOT}/React-featureflags",
+					"${PODS_ROOT}/React-renderercss",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
@@ -493,6 +510,21 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_ROOT}/ReactCommon",
+					"${PODS_ROOT}/ReactCommon/react/nativemodule/core",
+					"${PODS_ROOT}/React-runtimeexecutor",
+					"${PODS_ROOT}/React-runtimeexecutor/platform/ios",
+					"${PODS_ROOT}/ReactCommon-Samples",
+					"${PODS_ROOT}/ReactCommon-Samples/platform/ios",
+					"${PODS_ROOT}/React-Fabric/react/renderer/components/view/platform/cxx",
+					"${PODS_ROOT}/React-NativeModulesApple",
+					"${PODS_ROOT}/React-graphics",
+					"${PODS_ROOT}/React-graphics/react/renderer/graphics/platform/ios",
+					"${PODS_ROOT}/React-featureflags",
+					"${PODS_ROOT}/React-renderercss",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,

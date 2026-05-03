@@ -1,28 +1,23 @@
 import React, { useState } from 'react';
 import {
   View,
-  StyleSheet,
   ActivityIndicator,
   Text,
   TouchableOpacity,
   Image,
 } from 'react-native';
 import auth, { GoogleAuthProvider } from '@react-native-firebase/auth';
-import InputField from '../components/InputText';
-import { hp, wp } from '../constants/responsiveUI';
-import { color } from '../utils/color';
-import { icon } from '../assets/icons/icon';
+import InputField from '../../components/InputText';
+import { icon } from '../../assets/icons/icon';
 import Toast from 'react-native-toast-message';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
-import { routes } from '../constants/routes';
+import { routes } from '../../constants/routes';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import appleAuth from '@invertase/react-native-apple-authentication';
-import { AppleAuthProvider } from '@react-native-firebase/auth';
-import fontFamilies from '../assets/fonts/font';
-import SwipeButton from 'rn-swipe-button';
+import { styles } from './registerStyle';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -33,6 +28,8 @@ const Register = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const handleSignup = async () => {
+    console.log('EMAIL:', email);
+    console.log('PASSWORD:', password);
     if (!email || !password || !RePassword) {
       Toast.show({
         type: 'error',
@@ -61,7 +58,7 @@ const Register = () => {
         text2: 'Account created successfully',
       });
 
-      navigation.navigate(routes.login);
+      navigation.navigate('Login');
     } catch {
       Toast.show({
         type: 'error',
@@ -75,40 +72,63 @@ const Register = () => {
 
   const onGooglePress = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
+
       const userInfo = await GoogleSignin.signIn();
 
-      if (userInfo.type === 'success' && userInfo.data.idToken) {
-        const credential = GoogleAuthProvider.credential(userInfo.data.idToken);
+      const idToken = userInfo.data?.idToken;
 
-        await auth().signInWithCredential(credential);
-
-        navigation.replace(routes.home);
+      if (!idToken) {
+        throw new Error('No ID token found');
       }
-    } catch (e) {
-      console.error('Google Sign-In Error:', e);
+
+      const googleCredential = GoogleAuthProvider.credential(idToken);
+
+      await auth().signInWithCredential(googleCredential);
+
+      console.log('Google Login Success');
+
+      navigation.replace(routes.home);
+    } catch (e: any) {
+      console.log('Google Login Error:', e);
+
+      Toast.show({
+        type: 'error',
+        text1: 'Google Login Failed',
+        text2: e.message,
+      });
     }
   };
 
-  const onApplePress = async () => {
+  const onAppleButtonPress = async () => {
     try {
-      const response = await appleAuth.performRequest({
+      const appleAuthRequestResponse = await appleAuth.performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
-        requestedScopes: [appleAuth.Scope.EMAIL],
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
       });
 
-      if (!response.identityToken) return;
-
-      const credential = AppleAuthProvider.credential(
-        response.identityToken,
-        response.nonce,
+      const credentialState = await appleAuth.getCredentialStateForUser(
+        appleAuthRequestResponse.user,
       );
 
-      await auth().signInWithCredential(credential);
+      if (credentialState === appleAuth.State.AUTHORIZED) {
+        const { identityToken, nonce } = appleAuthRequestResponse;
 
-      navigation.replace(routes.home);
-    } catch (e) {
-      console.log(e);
+        if (identityToken) {
+          const appleCredential = auth.AppleAuthProvider.credential(
+            identityToken,
+            nonce,
+          );
+
+          await auth().signInWithCredential(appleCredential);
+          console.log('Apple Login Success');
+          navigation.replace(routes.home);
+        }
+      }
+    } catch (error: any) {
+      console.log('Apple Auth Error:', error);
     }
   };
 
@@ -133,7 +153,7 @@ const Register = () => {
         contextmenu={true}
       />
 
-      <Text style={styles.label}>Re-Password</Text>
+      <Text style={styles.label}>Re Password</Text>
       <InputField
         placeholder="Confirm your password"
         secureTextEntry
@@ -146,19 +166,13 @@ const Register = () => {
       {Loading ? (
         <ActivityIndicator size="large" color="#ccc" />
       ) : (
-        <SwipeButton
-          title="Swipe to Login"
-          onSwipeSuccess={handleSignup}
-          railBackgroundColor={color.orange}
-          railStyles={styles.thumbButton}
-          thumbIconBackgroundColor={color.white}
-          titleColor="#ffffff"
-          titleStyles={styles.titleText}
-          thumbIconImageSource={icon.rightArrow}
-          thumbIconBorderColor={color.darkOrange}
-          thumbIconStyles={styles.thumbIcon}
-          // disableResetOnTap={true}
-        />
+        // <SwipeButton title="Swipe to Sign up" onSwipe={handleSignup} />
+        // <View style={{ marginTop: 20 }}>
+        //   <Button title="Register" onPress={handleSignup} />
+        // </View>
+        <TouchableOpacity onPress={handleSignup} style={styles.loginButton}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
       )}
 
       <View style={styles.dividerRow}>
@@ -170,12 +184,12 @@ const Register = () => {
       <View style={styles.socialRow}>
         <TouchableOpacity style={styles.socialBtn} onPress={onGooglePress}>
           <Image source={icon.google} style={styles.icon} />
-          <Text style={styles.titleText}>Google</Text>
+          <Text>Google</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.socialBtn} onPress={onApplePress}>
+        <TouchableOpacity style={styles.socialBtn} onPress={onAppleButtonPress}>
           <Image source={icon.apple} style={styles.icon} />
-          <Text style={styles.titleText}>Apple</Text>
+          <Text>Apple</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -183,72 +197,3 @@ const Register = () => {
 };
 
 export default Register;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    backgroundColor: color.white,
-    paddingTop: hp(20),
-    paddingHorizontal: wp(20),
-  },
-
-  label: {
-    marginTop: 10,
-    marginBottom: 5,
-    fontWeight: '500',
-  },
-
-  dividerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 25,
-  },
-
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#ddd',
-  },
-
-  or: {
-    marginHorizontal: 10,
-    color: '#888',
-  },
-
-  socialRow: {
-    flexDirection: 'row',
-    marginTop: 15,
-  },
-
-  socialBtn: {
-    flex: 1,
-    backgroundColor: '#F2F2F2',
-    padding: 14,
-    marginHorizontal: 5,
-    borderRadius: 12,
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 10,
-    justifyContent: 'center',
-  },
-  titleText: {
-    fontFamily: fontFamilies.poppins.Regular,
-  },
-  icon: {
-    height: wp(20),
-    width: wp(20),
-  },
-  thumbButton: {
-    backgroundColor: '#eeeeeeff',
-    borderWidth: 0,
-  },
-  swiperIcon: {
-    borderWidth: 0,
-  },
-  thumbIcon: {
-    height: 15,
-    width: 10,
-  },
-});

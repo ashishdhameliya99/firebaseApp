@@ -6,4 +6,6 @@ export const icon = {
   rightArrow: require('./fast-forward.png'),
   apple: require('./apple.png'),
   google: require('./google (1).png'),
+  check: require('./checkbox (1).png'),
+  uncheck: require('./unchecked (1).png'),
 };
