@@ -68,7 +68,7 @@ const Home = () => {
 
         <View style={styles.infoBox}>
           <Text style={styles.label}>Email</Text>
-          <Text style={styles.value}>{user?.email}</Text>
+          <Text style={styles.value}>{user?.email || user?.phoneNumber}</Text>
         </View>
 
         <View style={styles.infoBox}>

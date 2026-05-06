@@ -11,6 +11,7 @@
 		08BB9AC5AB7849A9B06068A3 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0D18DC0288C47AE9C4BCC6F /* Poppins-SemiBold.ttf */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		47F5456DB6E44EA0B786FF39 /* font.ts in Resources */ = {isa = PBXBuildFile; fileRef = 0C66BA32924F4899A49154B5 /* font.ts */; };
+		6A9204BA108645BE8D52874C /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AE8465AF20C455AA9E82D9A /* Colors.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9F3D0B07A98543828D398788 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96AE84F19D0B4D9386AC98B3 /* Poppins-Medium.ttf */; };
@@ -18,12 +19,14 @@
 		B3BB9AB232EE3F971A188476 /* Pods_FirebaseApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB381D7C919C7F8EAB801D40 /* Pods_FirebaseApp.framework */; };
 		B9E80A862903415598BEB3AC /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D8D520F42544511954434BB /* Poppins-Bold.ttf */; };
 		BFB609E0D5234ECB82DF1944 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 699ED45422EB46F2ACF0DFE1 /* Poppins-Regular.ttf */; };
+		C8915AB350EA4445AE1406B0 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F43598AA70DB41FAAB2C1A9D /* BootSplash.storyboard */; };
 		DB39719AF3DE4DAA8994FEDB /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1550FF3327AA4EDD9B407B6E /* Poppins-ExtraBold.ttf */; };
 		FCDD4577C00EA50359DBFDF9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		04057EE72FA731250040A378 /* FirebaseAppDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FirebaseAppDebug.entitlements; path = FirebaseApp/FirebaseAppDebug.entitlements; sourceTree = "<group>"; };
+		0455C9482FAB0B92008DC287 /* FirebaseApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FirebaseApp.entitlements; path = FirebaseApp/FirebaseApp.entitlements; sourceTree = "<group>"; };
 		04BD8A942FA21C4F006A4E90 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0C66BA32924F4899A49154B5 /* font.ts */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = font.ts; path = ../src/assets/fonts/font.ts; sourceTree = "<group>"; };
 		0D8D520F42544511954434BB /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
@@ -38,10 +41,12 @@
 		791F9A77C373C12A0CC064D6 /* Pods-FirebaseApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirebaseApp.debug.xcconfig"; path = "Target Support Files/Pods-FirebaseApp/Pods-FirebaseApp.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FirebaseApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		96AE84F19D0B4D9386AC98B3 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
+		9AE8465AF20C455AA9E82D9A /* Colors.xcassets */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = FirebaseApp/Colors.xcassets; sourceTree = "<group>"; };
 		AB381D7C919C7F8EAB801D40 /* Pods_FirebaseApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FirebaseApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC1093A1C9B84A3E9FF16468 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
 		B0D18DC0288C47AE9C4BCC6F /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F43598AA70DB41FAAB2C1A9D /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = FirebaseApp/BootSplash.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +64,7 @@
 		13B07FAE1A68108700A75B9A /* FirebaseApp */ = {
 			isa = PBXGroup;
 			children = (
+				0455C9482FAB0B92008DC287 /* FirebaseApp.entitlements */,
 				04057EE72FA731250040A378 /* FirebaseAppDebug.entitlements */,
 				04BD8A942FA21C4F006A4E90 /* GoogleService-Info.plist */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -66,6 +72,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				F43598AA70DB41FAAB2C1A9D /* BootSplash.storyboard */,
+				9AE8465AF20C455AA9E82D9A /* Colors.xcassets */,
 			);
 			name = FirebaseApp;
 			sourceTree = "<group>";
@@ -207,6 +215,8 @@
 				9FEF9C81A43A4890A216BE41 /* Poppins-Black.ttf in Resources */,
 				08BB9AC5AB7849A9B06068A3 /* Poppins-SemiBold.ttf in Resources */,
 				47F5456DB6E44EA0B786FF39 /* font.ts in Resources */,
+				C8915AB350EA4445AE1406B0 /* BootSplash.storyboard in Resources */,
+				6A9204BA108645BE8D52874C /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,6 +360,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FirebaseApp/FirebaseApp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = FirebaseApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
