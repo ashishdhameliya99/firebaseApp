@@ -6,8 +6,6 @@ import fontFamilies from '../../assets/fonts/font';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
     backgroundColor: color.white,
   },
 
@@ -63,5 +61,9 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     color: color.white,
     fontFamily: fontFamilies.poppins.Regular,
+  },
+  loginContainer: {
+    flex: 1,
+    backgroundColor: color.white,
   },
 });

@@ -5,6 +5,9 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import {
   createUserWithEmailAndPassword,
@@ -102,62 +105,70 @@ const Register = ({ setTab }: any) => {
     return signInWithCredential(getAuth(), appleCredential);
   }
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Email</Text>
-      <InputField
-        placeholder="Enter your email"
-        value={email}
-        onChange={setEmail}
-        leftIconSource={icon.email}
-        contextmenu={true}
-      />
+    <KeyboardAvoidingView
+      style={styles.loginContainer}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView style={styles.container}>
+        <Text style={styles.label}>Email</Text>
+        <InputField
+          placeholder="Enter your email"
+          value={email}
+          onChange={setEmail}
+          leftIconSource={icon.email}
+          contextmenu={true}
+        />
 
-      <Text style={styles.label}>Password</Text>
-      <InputField
-        placeholder="Enter your password"
-        secureTextEntry
-        value={password}
-        onChange={setPassword}
-        leftIconSource={icon.lock}
-        contextmenu={true}
-      />
+        <Text style={styles.label}>Password</Text>
+        <InputField
+          placeholder="Enter your password"
+          secureTextEntry
+          value={password}
+          onChange={setPassword}
+          leftIconSource={icon.lock}
+          contextmenu={true}
+        />
 
-      <Text style={styles.label}>Re Password</Text>
-      <InputField
-        placeholder="Confirm your password"
-        secureTextEntry
-        value={RePassword}
-        onChange={setRePassword}
-        leftIconSource={icon.lock}
-        contextmenu={true}
-      />
+        <Text style={styles.label}>Re Password</Text>
+        <InputField
+          placeholder="Confirm your password"
+          secureTextEntry
+          value={RePassword}
+          onChange={setRePassword}
+          leftIconSource={icon.lock}
+          contextmenu={true}
+        />
 
-      {Loading ? (
-        <ActivityIndicator size="large" color="#ccc" />
-      ) : (
-        <TouchableOpacity onPress={handleSignup} style={styles.loginButton}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-      )}
+        {Loading ? (
+          <ActivityIndicator size="large" color="#ccc" />
+        ) : (
+          <TouchableOpacity onPress={handleSignup} style={styles.loginButton}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+        )}
 
-      <View style={styles.dividerRow}>
-        <View style={styles.line} />
-        <Text style={styles.or}>Or continue with</Text>
-        <View style={styles.line} />
-      </View>
+        <View style={styles.dividerRow}>
+          <View style={styles.line} />
+          <Text style={styles.or}>Or continue with</Text>
+          <View style={styles.line} />
+        </View>
 
-      <View style={styles.socialRow}>
-        <TouchableOpacity style={styles.socialBtn} onPress={onGooglePress}>
-          <Image source={icon.google} style={styles.icon} />
-          <Text>Google</Text>
-        </TouchableOpacity>
+        <View style={styles.socialRow}>
+          <TouchableOpacity style={styles.socialBtn} onPress={onGooglePress}>
+            <Image source={icon.google} style={styles.icon} />
+            <Text>Google</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.socialBtn} onPress={onAppleButtonPress}>
-          <Image source={icon.apple} style={styles.icon} />
-          <Text>Apple</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          <TouchableOpacity
+            style={styles.socialBtn}
+            onPress={onAppleButtonPress}
+          >
+            <Image source={icon.apple} style={styles.icon} />
+            <Text>Apple</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
