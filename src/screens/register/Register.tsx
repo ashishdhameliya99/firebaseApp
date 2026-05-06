@@ -6,132 +6,101 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import auth, { GoogleAuthProvider } from '@react-native-firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithCredential,
+  signOut,
+} from 'firebase/auth';
 import InputField from '../../components/InputText';
 import { icon } from '../../assets/icons/icon';
-import Toast from 'react-native-toast-message';
-import { ParamListBase, useNavigation } from '@react-navigation/native';
-import { routes } from '../../constants/routes';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
-import appleAuth from '@invertase/react-native-apple-authentication';
 import { styles } from './registerStyle';
+import { auth } from '../../utils/firebaseConfig';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {
+  AppleAuthProvider,
+  GoogleAuthProvider,
+} from '@react-native-firebase/auth';
+import appleAuth from '@invertase/react-native-apple-authentication';
+import { errorToast, successToast } from '../../components/Toast';
 
-const Register = () => {
+const Register = ({ setTab }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [RePassword, setRePassword] = useState('');
   const [Loading, setLoading] = useState(false);
 
-  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  // const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const handleSignup = async () => {
-    console.log('EMAIL:', email);
-    console.log('PASSWORD:', password);
     if (!email || !password || !RePassword) {
-      Toast.show({
-        type: 'error',
-        text1: 'Not allow',
-        text2: 'Please fill in all fields',
-      });
+      errorToast('Invalid', 'please fill all field');
       return;
     }
 
     if (password !== RePassword) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Passwords do not match',
-      });
+      errorToast('error', 'password do not match');
       return;
     }
 
     setLoading(true);
 
     try {
-      await auth().createUserWithEmailAndPassword(email, password);
+      const data = await createUserWithEmailAndPassword(auth, email, password);
+      const user = data.user;
+      console.log('Registered user:', user);
 
-      Toast.show({
-        type: 'success',
-        text2: 'Account created successfully',
-      });
+      await signOut(auth);
 
-      navigation.navigate('Login');
+      successToast('Success', 'Account create success');
+      setTab('login');
     } catch {
-      Toast.show({
-        type: 'error',
-        text1: 'Signup Failed',
-        text2: 'Email invalid',
-      });
+      errorToast('error', 'signup failed');
     } finally {
       setLoading(false);
     }
   };
 
-  const onGooglePress = async () => {
-    try {
-      await GoogleSignin.hasPlayServices({
-        showPlayServicesUpdateDialog: true,
-      });
+  GoogleSignin.configure({
+    webClientId:
+      '1021574425223-j7e9arqqmu85utu85q5cb44279gso0p5.apps.googleusercontent.com',
+  });
 
-      const userInfo = await GoogleSignin.signIn();
-
-      const idToken = userInfo.data?.idToken;
-
-      if (!idToken) {
-        throw new Error('No ID token found');
-      }
-
-      const googleCredential = GoogleAuthProvider.credential(idToken);
-
-      await auth().signInWithCredential(googleCredential);
-
-      console.log('Google Login Success');
-
-      navigation.replace(routes.home);
-    } catch (e: any) {
-      console.log('Google Login Error:', e);
-
-      Toast.show({
-        type: 'error',
-        text1: 'Google Login Failed',
-        text2: e.message,
-      });
+  async function onGooglePress() {
+    let googleData = await GoogleSignin.hasPlayServices({
+      showPlayServicesUpdateDialog: true,
+    });
+    console.log('===========', googleData);
+    const signInResult = await GoogleSignin.signIn();
+    console.log('++++++++++++++', signInResult);
+    let idToken = signInResult.data?.idToken;
+    console.log('idToken', idToken);
+    if (!idToken) {
+      throw new Error('No ID token found');
     }
-  };
 
-  const onAppleButtonPress = async () => {
-    try {
-      const appleAuthRequestResponse = await appleAuth.performRequest({
-        requestedOperation: appleAuth.Operation.LOGIN,
-        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-      });
+    const googleCredential = GoogleAuthProvider.credential(
+      signInResult.data?.idToken,
+    );
 
-      const credentialState = await appleAuth.getCredentialStateForUser(
-        appleAuthRequestResponse.user,
-      );
+    return signInWithCredential(getAuth(), googleCredential);
+  }
 
-      if (credentialState === appleAuth.State.AUTHORIZED) {
-        const { identityToken, nonce } = appleAuthRequestResponse;
+  async function onAppleButtonPress() {
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+    });
 
-        if (identityToken) {
-          const appleCredential = auth.AppleAuthProvider.credential(
-            identityToken,
-            nonce,
-          );
-
-          await auth().signInWithCredential(appleCredential);
-          console.log('Apple Login Success');
-          navigation.replace(routes.home);
-        }
-      }
-    } catch (error: any) {
-      console.log('Apple Auth Error:', error);
+    if (!appleAuthRequestResponse.identityToken) {
+      throw new Error('Apple Sign-In failed - no identify token returned');
     }
-  };
 
+    const { identityToken, nonce } = appleAuthRequestResponse;
+    const appleCredential = AppleAuthProvider.credential(identityToken, nonce);
+
+    return signInWithCredential(getAuth(), appleCredential);
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Email</Text>
@@ -166,10 +135,6 @@ const Register = () => {
       {Loading ? (
         <ActivityIndicator size="large" color="#ccc" />
       ) : (
-        // <SwipeButton title="Swipe to Sign up" onSwipe={handleSignup} />
-        // <View style={{ marginTop: 20 }}>
-        //   <Button title="Register" onPress={handleSignup} />
-        // </View>
         <TouchableOpacity onPress={handleSignup} style={styles.loginButton}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>

@@ -60,7 +60,7 @@ const Auth = () => {
         </View>
 
         <View style={{ flex: 1 }}>
-          {tab === 'login' ? <Login /> : <Register />}
+          {tab === 'login' ? <Login /> : <Register setTab={setTab} />}
         </View>
       </View>
     </View>

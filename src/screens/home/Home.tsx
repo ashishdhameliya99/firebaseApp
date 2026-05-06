@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, ActivityIndicator, Alert, Button } from 'react-native';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { routes } from '../../constants/routes';
 import { styles } from './homeStyle';
 
 const Home = () => {
@@ -40,7 +45,7 @@ const Home = () => {
               //       routes: [{ name: 'Login' }],
               //     }),
               //   );
-              navigation.replace(routes.login);
+              navigation.goBack();
             } catch {
               Toast.show({
                 type: 'error',
@@ -75,9 +80,9 @@ const Home = () => {
           <ActivityIndicator style={{ marginTop: 20 }} />
         ) : (
           //   <SwipeButton title="Swipe to Logout" onSwipe={handleLogout} />
-          <View>
-            <Button title="Login" onPress={handleLogout} />
-          </View>
+          <TouchableOpacity onPress={handleLogout} style={styles.loginButton}>
+            <Text style={styles.buttonText}>Logout</Text>
+          </TouchableOpacity>
         )}
       </View>
     </View>

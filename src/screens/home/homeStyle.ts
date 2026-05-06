@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native';
+import { color } from '../../utils/color';
+import fontFamilies from '../../assets/fonts/font';
 
 export const styles = StyleSheet.create({
   container: {
@@ -32,5 +34,16 @@ export const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     fontWeight: '500',
+  },
+  loginButton: {
+    marginTop: 10,
+    backgroundColor: color.orange,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: color.white,
+    fontFamily: fontFamilies.poppins.Regular,
   },
 });

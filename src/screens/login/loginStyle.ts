@@ -93,4 +93,8 @@ export const styles = StyleSheet.create({
     color: color.white,
     fontFamily: fontFamilies.poppins.Regular,
   },
+  loginContainer: {
+    flex: 1,
+    backgroundColor: color.white,
+  },
 });

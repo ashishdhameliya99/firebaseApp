@@ -11,8 +11,8 @@ const RootNavigator = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(user => {
-      setUser(user);
+    const subscriber = auth().onAuthStateChanged(userStack => {
+      setUser(userStack);
       setLoading(false);
     });
 
@@ -27,6 +27,8 @@ const RootNavigator = () => {
       </View>
     );
   }
+
+  console.log('user===============', user);
 
   return (
     <NavigationContainer>

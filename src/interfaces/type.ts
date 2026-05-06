@@ -20,3 +20,11 @@ export interface CustomButtonProps extends TouchableOpacityProps {
   title: string;
   textStyle?: StyleProp<TextStyle>;
 }
+
+type ToastType = 'success' | 'error' | 'info';
+
+export interface ToastProps {
+  type?: ToastType;
+  title: string;
+  message?: string;
+}

@@ -10,24 +10,25 @@ import {
   Image,
 } from 'react-native';
 
-import auth, { GoogleAuthProvider } from '@react-native-firebase/auth';
+import auth, {
+  AppleAuthProvider,
+  getAuth,
+  GoogleAuthProvider,
+  signInWithCredential,
+} from '@react-native-firebase/auth';
 
 import InputField from '../../components/InputText';
-import { color } from '../../utils/color';
 import { icon } from '../../assets/icons/icon';
-import Toast from 'react-native-toast-message';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { routes } from '../../constants/routes';
-// import SwipeButton from '../components/SwipButton';
 
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-// import appleAuth from '@invertase/react-native-apple-authentication';
-// import { AppleAuthProvider } from '@react-native-firebase/auth';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import { string } from '../../constants/string';
 import { styles } from './loginStyle';
 import fontFamilies from '../../assets/fonts/font';
+import { errorToast, successToast } from '../../components/Toast';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -37,14 +38,10 @@ const Login = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const handleLogin = async () => {
-    console.log('LOGIN FUNCTION CALLED', email, password);
+    console.log('login user', email, password);
 
     if (!email.trim() || !password.trim()) {
-      Toast.show({
-        type: 'error',
-        text1: 'Required Fields',
-        text2: 'Please enter email & password',
-      });
+      errorToast('Require field', 'please enter email and password');
       return;
     }
 
@@ -52,170 +49,56 @@ const Login = () => {
 
     try {
       await auth().signInWithEmailAndPassword(email.trim(), password);
-
-      Toast.show({
-        type: 'success',
-        text1: 'Welcome back!',
-      });
-
-      navigation.replace(routes.home);
+      successToast('Success', 'Welcome Back');
+      navigation.navigate('Home');
     } catch (e: any) {
       console.log('Login Error:', e);
-
-      Toast.show({
-        type: 'error',
-        text1: 'Login Failed',
-        text2: e.message,
-      });
+      errorToast('Login failed', 'require all field');
     } finally {
       setLoading(false);
     }
   };
 
-  // const onGooglePress = async () => {
-  //   try {
-  //     const currentUser = auth().currentUser;
+  async function onAppleButtonPress() {
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+    });
 
-  //     if (currentUser) {
-  //       console.log('Already logged in (Firebase)');
-  //       navigation.replace(routes.home);
-  //       return;
-  //     }
-
-  //     try {
-  //       const silentUser = await GoogleSignin.signInSilently();
-
-  //       const idToken = silentUser?.idToken || silentUser.data?.idToken;
-
-  //       if (idToken) {
-  //         const credential = GoogleAuthProvider.credential(idToken);
-  //         await auth().signInWithCredential(credential);
-
-  //         console.log('Silent Google Login Success');
-  //         navigation.replace(routes.home);
-  //         return;
-  //       }
-  //     } catch {
-  //       console.log('No previous Google session');
-  //     }
-
-  //     await GoogleSignin.hasPlayServices({
-  //       showPlayServicesUpdateDialog: true,
-  //     });
-
-  //     const userInfo = await GoogleSignin.signIn();
-
-  //     const idToken = userInfo.idToken || userInfo.data?.idToken;
-
-  //     if (!idToken) throw new Error('No ID token found');
-
-  //     const credential = GoogleAuthProvider.credential(idToken);
-
-  //     await auth().signInWithCredential(credential);
-
-  //     console.log('Manual Google Login Success');
-
-  //     navigation.replace(routes.home);
-  //   } catch (e: any) {
-  //     console.log('Google Error:', e);
-
-  //     Toast.show({
-  //       type: 'error',
-  //       text1: 'Google Login Failed',
-  //       text2: e.message,
-  //     });
-  //   }
-  // };
-
-  const onAppleButtonPress = async () => {
-    try {
-      const appleAuthRequestResponse = await appleAuth.performRequest({
-        requestedOperation: appleAuth.Operation.LOGIN,
-        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-      });
-
-      const credentialState = await appleAuth.getCredentialStateForUser(
-        appleAuthRequestResponse.user,
-      );
-
-      if (credentialState === appleAuth.State.AUTHORIZED) {
-        const { identityToken, nonce } = appleAuthRequestResponse;
-
-        if (identityToken) {
-          const appleCredential = auth.AppleAuthProvider.credential(
-            identityToken,
-            nonce,
-          );
-
-          await auth().signInWithCredential(appleCredential);
-          console.log('Apple Login Success');
-          navigation.replace(routes.home);
-        }
-      }
-    } catch (error: any) {
-      console.log('Apple Auth Error:', error);
+    if (!appleAuthRequestResponse.identityToken) {
+      throw new Error('Apple Sign-In failed - no identify token returned');
     }
-  };
 
-  const onGooglePress = async () => {
-    try {
-      if (auth().currentUser) {
-        navigation.replace(routes.home);
-        return;
-      }
+    const { identityToken, nonce } = appleAuthRequestResponse;
+    const appleCredential = AppleAuthProvider.credential(identityToken, nonce);
 
-      try {
-        const silentUser = await GoogleSignin.signInSilently();
-        console.log('Silent Sign-In Response:', silentUser);
+    return signInWithCredential(getAuth(), appleCredential);
+  }
 
-        if (silentUser.type === 'success' && silentUser.data?.idToken) {
-          const credential = GoogleAuthProvider.credential(
-            silentUser.data.idToken,
-          );
-          await auth().signInWithCredential(credential);
-          navigation.replace(routes.home);
-          return;
-        }
+  GoogleSignin.configure({
+    webClientId:
+      '1021574425223-j7e9arqqmu85utu85q5cb44279gso0p5.apps.googleusercontent.com',
+  });
 
-        console.log('Silent login result:', silentUser.type);
-      } catch {
-        console.log('Silent login failed, proceeding to manual');
-      }
+  async function onGooglePress() {
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-      await GoogleSignin.hasPlayServices({
-        showPlayServicesUpdateDialog: true,
-      });
-      const userInfo = await GoogleSignin.signIn();
-      console.log('Manual Sign-In Response:', userInfo);
-
-      if (userInfo.type === 'success') {
-        const idToken = userInfo.data?.idToken;
-        if (!idToken) throw new Error('No ID token found in response');
-
-        const credential = GoogleAuthProvider.credential(idToken);
-        await auth().signInWithCredential(credential);
-
-        navigation.replace(routes.home);
-      } else {
-        console.log('User cancelled or sign-in already in progress');
-      }
-    } catch (e: any) {
-      console.log('Google Error Details:', e);
-
-      const errorMessage =
-        e.code === '7' ? 'Network Error. Check your internet.' : e.message;
-
-      Toast.show({
-        type: 'error',
-        text1: 'Login Failed',
-        text2: errorMessage,
-      });
+    const signInResult = await GoogleSignin.signIn();
+    let idToken = signInResult.data?.idToken;
+    if (!idToken) {
+      throw new Error('No ID token found');
     }
-  };
+
+    const googleCredential = GoogleAuthProvider.credential(
+      signInResult.data?.idToken,
+    );
+
+    return signInWithCredential(getAuth(), googleCredential);
+  }
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: color.white }}
+      style={styles.loginContainer}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
@@ -243,10 +126,6 @@ const Login = () => {
           {loading ? (
             <ActivityIndicator size="large" color="#999" />
           ) : (
-            // <SwipeButton title="Swipe to Login" onSwipe={handleLogin} />
-            // <View>
-            //   <Button title="Login" onPress={handleLogin} />
-            // </View>
             <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
