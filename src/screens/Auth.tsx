@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
     height: 260,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 25,
   },
 
   appName: {

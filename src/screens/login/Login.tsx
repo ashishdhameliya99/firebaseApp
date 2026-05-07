@@ -50,7 +50,7 @@ const Login = () => {
     try {
       await auth().signInWithEmailAndPassword(email.trim(), password);
       successToast('Success', 'Welcome Back');
-      navigation.navigate('Home');
+      navigation.navigate(routes.home);
     } catch (e: any) {
       console.log('Login Error:', e);
       errorToast('Login failed', 'require all field');

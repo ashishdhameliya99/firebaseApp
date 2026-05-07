@@ -3,7 +3,7 @@ import RootNavigator from './src/navigation/RootNavigation';
 import { useEffect } from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 
-const App = () => {
+export default function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       RNBootSplash.hide({ fade: true });
@@ -17,6 +17,4 @@ const App = () => {
       <Toast />
     </>
   );
-};
-
-export default App;
+}

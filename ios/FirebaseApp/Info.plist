@@ -28,10 +28,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>org.reactjs.native.example.FirebaseApp</string>
+			<string>org.reactjs.native.example.FirebaseApp8128</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.1021574425223-l6a8318fb9nkogq2hjmf6ev9063icusf</string>
+				<string>com.googleusercontent.apps.1021574425223-e0cvtjige1dphl3j3g41v8f0thf0c0c1</string>
 			</array>
 		</dict>
 		<dict/>
@@ -62,8 +62,6 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>push-to-talk</string>
-		<string>processing</string>
 		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
