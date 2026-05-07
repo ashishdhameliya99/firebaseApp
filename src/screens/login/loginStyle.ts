@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { color } from '../../utils/color';
 import fontFamilies from '../../assets/fonts/font';
-import { wp } from '../../constants/responsiveUI';
+import { wp } from '../../constants/ResponsiveUI';
 
 export const styles = StyleSheet.create({
   scrollContainer: {

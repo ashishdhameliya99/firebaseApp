@@ -20,7 +20,7 @@ import auth, {
 import InputField from '../../components/InputText';
 import { icon } from '../../assets/icons/icon';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
-import { routes } from '../../constants/routes';
+import { route } from '../../constants/routes';
 
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -50,7 +50,7 @@ const Login = () => {
     try {
       await auth().signInWithEmailAndPassword(email.trim(), password);
       successToast('Success', 'Welcome Back');
-      navigation.navigate(routes.home);
+      navigation.navigate(route.home);
     } catch (e: any) {
       console.log('Login Error:', e);
       errorToast('Login failed', 'require all field');
@@ -176,7 +176,7 @@ const Login = () => {
             <Text style={styles.dontHaveText}>{string.dontHaveAc}</Text>
             <Text
               style={styles.linkText}
-              onPress={() => navigation.navigate(routes.register)}
+              onPress={() => navigation.navigate(route.register)}
             >
               {string.createAc}
             </Text>

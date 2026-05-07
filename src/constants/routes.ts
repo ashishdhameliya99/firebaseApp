@@ -1,6 +1,11 @@
-export const routes = {
+export const route = {
   login: 'login',
   register: 'Register',
   home: 'Home',
   tab: 'tabdemo',
+  addItem: 'AddItem',
+  favorite: 'Favorite',
+  saveDraft: 'SaveDraft',
+  main: 'TodoList',
+  todoGraph: 'TodoGraph',
 };

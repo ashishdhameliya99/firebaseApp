@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { color } from '../utils/color';
 import { icon } from '../assets/icons/icon';
-import { wp } from '../constants/responsiveUI';
+import { wp } from '../constants/ResponsiveUI';
 import { Props } from '../interfaces/type';
 
 const InputText = ({

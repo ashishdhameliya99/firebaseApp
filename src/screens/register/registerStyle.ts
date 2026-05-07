@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { color } from '../../utils/color';
-import { wp } from '../../constants/responsiveUI';
+import { wp } from '../../constants/ResponsiveUI';
 import fontFamilies from '../../assets/fonts/font';
 
 export const styles = StyleSheet.create({

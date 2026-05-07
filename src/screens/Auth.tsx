@@ -10,7 +10,7 @@ import {
 import Login from './login/Login';
 import Register from './register/Register';
 import { color } from '../utils/color';
-import { rf } from '../constants/responsiveUI';
+import { rf } from '../constants/ResponsiveUI';
 import fontFamilies from '../assets/fonts/font';
 
 const Auth = () => {
