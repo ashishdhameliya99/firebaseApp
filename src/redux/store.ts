@@ -12,7 +12,7 @@ const persistedReducer = persistReducer(persistConfig, userReducer);
 
 export const store = configureStore({
   reducer: {
-    user: persistedReducer,
+    todo: persistedReducer,
   },
 
   middleware: getDefaultMiddleware =>

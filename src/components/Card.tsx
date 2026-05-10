@@ -6,28 +6,39 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import React, { useState } from 'react';
-import { Todo } from '.././interfaces/type';
-import { useAppTheme } from '.././hooks/themeContext';
+import auth from '@react-native-firebase/auth';
 import { Menu } from 'react-native-paper';
-import { hp, wp } from '.././constants/ResponsiveUI';
-import { toggleFavorite, updateTodo } from '.././redux/slice/toDoSlice';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
-import { route } from '.././constants/routes';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { deleteTodoAndDraft } from '.././redux/actions/action';
-import { useAppDispatch } from '.././utils/reduxUtil';
-import fontFamilies from '.././assets/fonts/font';
-import { icon } from '.././assets/icons/icon';
+import { useAppTheme } from '../hooks/themeContext';
+import { hp, wp } from '../constants/ResponsiveUI';
+import { toggleFavorite } from '../redux/slice/toDoSlice';
+import { route } from '../constants/routes';
+import { deleteTodoAndDraft } from '../redux/actions/action';
+import { useAppDispatch } from '../utils/reduxUtil';
+import fontFamilies from '../assets/fonts/font';
+import { icon } from '../assets/icons/icon';
+import { Todo } from '../interfaces/type';
 
 export default function Card({ item }: { item: Todo }) {
   const [visible, setVisible] = useState(false);
-
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
+  const user = auth().currentUser;
+  const uid = user?.uid || '';
   const { theme } = useAppTheme();
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+  const handleFavorite = () => {
+    dispatch(
+      toggleFavorite({
+        uid,
+        id: item.id,
+      }),
+    );
+  };
 
   return (
     <Menu
@@ -48,29 +59,66 @@ export default function Card({ item }: { item: Todo }) {
           delayLongPress={500}
         >
           <View style={styles.leftContent}>
-            <Text style={[styles.textCard, { color: theme.text }]}>
+            <Text
+              style={[
+                styles.textCard,
+                {
+                  color: theme.text,
+                },
+              ]}
+            >
               Name: {item.name}
             </Text>
-            <Text style={[styles.textCard, { color: theme.text }]}>
+
+            <Text
+              style={[
+                styles.textCard,
+                {
+                  color: theme.text,
+                },
+              ]}
+            >
               Email: {item.email}
             </Text>
-            <Text style={[styles.textCard, { color: theme.text }]}>
-              Phone: {item.countryCode}
+
+            <Text
+              style={[
+                styles.textCard,
+                {
+                  color: theme.text,
+                },
+              ]}
+            >
+              Phone:
+              {item.countryCode}
               {item.phone}
             </Text>
-            <Text style={[styles.textCard, { color: theme.text }]}>
+
+            <Text
+              style={[
+                styles.textCard,
+                {
+                  color: theme.text,
+                },
+              ]}
+            >
               Date:{' '}
               {new Date(item.dob).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: '2-digit',
-                day: 'numeric',
+                day: '2-digit',
               })}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => dispatch(toggleFavorite(item.id))}>
+          <TouchableOpacity onPress={handleFavorite}>
             <Image
               source={item.favorite ? icon.selected : icon.unSelected}
-              style={[styles.icon, { tintColor: theme.todoListButtonText }]}
+              style={[
+                styles.icon,
+                {
+                  tintColor: theme.todoListButtonText,
+                },
+              ]}
             />
           </TouchableOpacity>
         </TouchableOpacity>
@@ -78,19 +126,21 @@ export default function Card({ item }: { item: Todo }) {
     >
       <Menu.Item
         onPress={() => {
-          dispatch(updateTodo(item));
-          navigation.navigate(route.addItem, { data: item });
+          navigation.navigate(route.addItem, {
+            data: item,
+          });
+
           closeMenu();
         }}
         title="Edit"
       />
       <Menu.Item
         onPress={() => {
-          Alert.alert('Alert', 'r u sure???', [
+          Alert.alert('Alert', 'Are you sure?', [
             {
               text: 'OK',
               onPress: () => {
-                dispatch(deleteTodoAndDraft(item.id));
+                dispatch(deleteTodoAndDraft(uid, item.id));
               },
             },
             {
@@ -98,16 +148,18 @@ export default function Card({ item }: { item: Todo }) {
               style: 'destructive',
             },
           ]);
+
           closeMenu();
         }}
         title="Delete"
       />
       <Menu.Item
         onPress={() => {
-          dispatch(toggleFavorite(item.id));
+          handleFavorite();
+
           closeMenu();
         }}
-        title={item.favorite === true ? 'Remove Favorite' : 'Add Favorite'}
+        title={item.favorite ? 'Remove Favorite' : 'Add Favorite'}
       />
     </Menu>
   );
@@ -120,19 +172,24 @@ const styles = StyleSheet.create({
     borderRadius: wp(10),
     flexDirection: 'row',
   },
+
   menuContainer: {
     marginLeft: wp(200),
     marginTop: hp(20),
   },
+
   textCard: {
     fontFamily: fontFamilies.poppins.Regular,
   },
+
   cardBorder: {
     borderLeftWidth: 10,
   },
+
   leftContent: {
     flex: 1,
   },
+
   icon: {
     height: hp(25),
     width: hp(25),

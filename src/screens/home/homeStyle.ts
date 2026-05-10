@@ -58,11 +58,29 @@ export const styles = StyleSheet.create({
   cardContainer: {
     gap: hp(10),
     paddingHorizontal: wp(20),
+    paddingBottom: 80,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     borderRadius: 10,
     paddingHorizontal: 20,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100,
+    paddingHorizontal: 40,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontFamily: fontFamilies.poppins.bold,
+    marginBottom: 8,
+  },
+  emptyText: {
+    fontSize: 14,
+    textAlign: 'center',
+    fontFamily: fontFamilies.poppins.Regular,
   },
 });

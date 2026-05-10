@@ -1,35 +1,53 @@
-import { FlatList, StyleSheet, Text } from 'react-native';
 import React from 'react';
+import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Header from '../../components/Header';
-import { useAppTheme } from '../../hooks/themeContext';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../utils/reduxUtil';
+import auth from '@react-native-firebase/auth';
+import Header from '../../components/Header';
 import Card from '../../components/Card';
+import { useAppTheme } from '../../hooks/themeContext';
+import { RootState } from '../../utils/reduxUtil';
+import { Todo } from '../../interfaces/type';
 import { wp } from '../../constants/ResponsiveUI';
+import { icon } from '../../assets/icons/icon';
 
 export default function Favorite() {
   const { theme } = useAppTheme();
-  const todos = useSelector((state: RootState) => state.user.todos);
-  const saveDraft = useSelector((state: RootState) => state.user.drafts);
-  const favoriteList = todos.filter(item => item.favorite);
+  const user = auth().currentUser;
+  const uid = user?.uid || '';
+  const userData = useSelector((state: RootState) =>
+    state.todo.users.find(item => item.uid === uid),
+  );
+  const todos = userData?.todos || [];
+  const saveDraft = userData?.saveDraft || [];
 
-  const allData = [...saveDraft, ...favoriteList];
+  const favoriteTodos = todos.filter(item => item.favorite === true);
+  const favoriteDrafts = saveDraft.filter(item => item.favorite === true);
+  const favoriteList = [...favoriteTodos, ...favoriteDrafts];
+
+  const renderItem = ({ item }: { item: Todo }) => {
+    return <Card item={item} />;
+  };
+
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.background }]}
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.background,
+        },
+      ]}
     >
       <Header text="Favorite" backText="Back" />
       {favoriteList.length === 0 ? (
-        // eslint-disable-next-line react-native/no-inline-styles
-        <Text style={{ color: theme.text, textAlign: 'center' }}>
-          No Favorite Items
-        </Text>
+        <View style={styles.emptyContainer}>
+          <Image source={icon.noData} />
+        </View>
       ) : (
         <FlatList
-          data={allData}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({ item }) => <Card item={item} />}
+          data={favoriteList}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
+          renderItem={renderItem}
           contentContainerStyle={styles.cardContainer}
           showsVerticalScrollIndicator={false}
         />
@@ -43,7 +61,20 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: wp(20),
   },
+
   cardContainer: {
     gap: 10,
+    paddingBottom: 20,
+  },
+
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  emptyText: {
+    fontSize: 16,
+    fontWeight: '500',
   },
 });

@@ -1,21 +1,19 @@
-import { StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-
+import { addDraft, addTodo, updateTodo } from '../../redux/slice/toDoSlice';
+import { StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { CountryPicker } from 'react-native-country-codes-picker';
-import DatePicker from 'react-native-date-picker';
-
-import InputBox from '../../components/InputBox';
-import { string } from '../../constants/string';
-import { hp, wp } from '../../constants/ResponsiveUI';
-import { color } from '../../utils/color';
-import { useAppTheme } from '../../hooks/themeContext';
-import Header from '../../components/Header';
-import Button from '../../components/Button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDraft, addTodo, updateTodo } from '../../redux/slice/toDoSlice';
-import Toast from 'react-native-toast-message';
+import { useAppTheme } from '../../hooks/themeContext';
+import { hp, wp } from '../../constants/ResponsiveUI';
+import DatePicker from 'react-native-date-picker';
 import { RootState } from '../../utils/reduxUtil';
+import InputBox from '../../components/InputBox';
+import { string } from '../../constants/string';
+import Button from '../../components/Button';
+import Header from '../../components/Header';
+import Toast from 'react-native-toast-message';
+import { color } from '../../utils/color';
 import {
   ParamListBase,
   useNavigation,
@@ -33,39 +31,31 @@ export default function AddItem({ onClose }: AddItemProps) {
   const { theme } = useAppTheme();
   const routes = useRoute();
   const { data } = (routes.params as { data: Todo }) || {};
-
-  const item = data ? true : false;
+  const isEdit = !!data;
   const user = auth().currentUser;
+  const uid = user?.uid ?? '';
+  const dispatch = useDispatch();
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [name, setName] = useState(data?.name || '');
   const [email, setEmail] = useState(data?.email || '');
   const [phone, setPhone] = useState(data?.phone || '');
-  const [openCountry, setOpenCountry] = useState(false);
   const [countryCode, setCountryCode] = useState(data?.countryCode || '+91');
-  const [favorite, setFavorite] = useState<boolean | string>(
-    data?.favorite ?? false,
-  );
-  const [showModal, setShowModal] = useState(false);
-
+  const [favorite, setFavorite] = useState<boolean>(data?.favorite ?? false);
   const [dob, setDob] = useState(data?.dob ? new Date(data.dob) : new Date());
+  const [openCountry, setOpenCountry] = useState(false);
   const [openDate, setOpenDate] = useState(false);
-
-  const dispatch = useDispatch();
-  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  const todos = useSelector((state: RootState) => state.user.todos);
+  const [showModal, setShowModal] = useState(false);
+  const todos = useSelector((state: RootState) => {
+    const user = state.todo.users.find(item => item.uid === uid);
+    console.log('state==', state.todo.users);
+    return user?.todos || [];
+  });
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString();
   };
 
-  const isAnyFieldFilled = () => {
-    return !!(name || email || phone);
-  };
-
-  const isAllFieldsFilled = () => {
-    return !!(name && email && phone && dob && countryCode);
-  };
-
-  const handleCancel = () => {
+  const resetForm = () => {
     setName('');
     setEmail('');
     setPhone('');
@@ -74,16 +64,25 @@ export default function AddItem({ onClose }: AddItemProps) {
     setFavorite(false);
   };
 
-  const dataValidation = () => {
+  const isAnyFieldFilled = () => {
+    return !!(name || email || phone);
+  };
+
+  const isAllFieldsFilled = () => {
+    return !!(name && email && phone && countryCode && dob);
+  };
+
+  const validateData = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
       Toast.show({
         type: 'error',
         text1: 'Invalid Email',
-        text2: 'Please enter a valid email',
+        text2: 'Please enter valid email',
         position: 'top',
       });
+
       return false;
     }
 
@@ -91,17 +90,19 @@ export default function AddItem({ onClose }: AddItemProps) {
       Toast.show({
         type: 'error',
         text1: 'Invalid Phone',
-        text2: 'Phone must be exactly 10 digits',
+        text2: 'Phone must be 10 digits',
         position: 'top',
       });
+
       return false;
     }
 
-    const emailExists = todos.some(u => {
-      if (item) {
-        return u.email === email && u.id !== data?.id;
+    const emailExists = todos.some(todo => {
+      if (isEdit) {
+        return todo.email === email && todo.id !== data?.id;
       }
-      return u.email === email;
+
+      return todo.email === email;
     });
 
     if (emailExists) {
@@ -111,6 +112,7 @@ export default function AddItem({ onClose }: AddItemProps) {
         text2: 'Email already exists',
         position: 'top',
       });
+
       return false;
     }
 
@@ -118,8 +120,8 @@ export default function AddItem({ onClose }: AddItemProps) {
   };
 
   const handleSubmit = () => {
-    const DATA = {
-      id: item ? data.id : getUniqueId(),
+    const todoData: Todo = {
+      id: isEdit ? data.id : getUniqueId(),
       name,
       email,
       phone,
@@ -127,40 +129,77 @@ export default function AddItem({ onClose }: AddItemProps) {
       dob: dob.toISOString(),
       favorite,
     };
+
     if (isAllFieldsFilled()) {
-      if (!dataValidation()) return;
+      if (!validateData()) return;
 
-      if (DATA) {
-        const isUnchanged =
-          data?.name === DATA?.name &&
-          data?.email === DATA?.email &&
-          data?.phone === DATA?.phone &&
-          data?.dob === DATA?.dob;
+      const isUnchanged =
+        data?.name === todoData.name &&
+        data?.email === todoData.email &&
+        data?.phone === todoData.phone &&
+        data?.countryCode === todoData.countryCode &&
+        data?.dob === todoData.dob &&
+        data?.favorite === todoData.favorite;
 
-        if (isUnchanged) {
-          navigation.navigate(route.main);
-          handleCancel();
-          return;
-        }
-        if (!item) {
-          dispatch(addTodo({ uid: user?.uid || '', todo: DATA }));
-          setShowModal(true);
-        } else {
-          dispatch(updateTodo(DATA));
-          setShowModal(true);
-        }
+      if (isEdit && isUnchanged) {
+        navigation.navigate(route.home);
+
+        return;
       }
+
+      if (!isEdit) {
+        dispatch(
+          addTodo({
+            uid,
+            todo: todoData,
+          }),
+        );
+
+        Toast.show({
+          type: 'success',
+          text1: 'Todo Added',
+          text2: 'New todo added successfully',
+          position: 'top',
+        });
+      } else {
+        dispatch(
+          updateTodo({
+            uid,
+            todo: todoData,
+          }),
+        );
+
+        Toast.show({
+          type: 'success',
+          text1: 'Todo Updated',
+          text2: 'Todo updated successfully',
+          position: 'top',
+        });
+      }
+      setShowModal(true);
+
+      resetForm();
+      navigation.navigate(route.home);
     } else if (isAnyFieldFilled()) {
-      dispatch(addDraft(DATA));
+      dispatch(
+        addDraft({
+          uid,
+          todo: todoData,
+        }),
+      );
 
       Toast.show({
         type: 'info',
-        text1: 'Saved as Draft',
-        text2: 'Incomplete data saved',
+        text1: 'Draft Saved',
+        text2: 'Incomplete data saved as draft',
         position: 'top',
       });
+
       onClose?.();
+
       navigation.navigate(route.saveDraft);
+
+      resetForm();
     } else {
       Toast.show({
         type: 'error',
@@ -168,25 +207,33 @@ export default function AddItem({ onClose }: AddItemProps) {
         text2: 'Please fill at least one field',
         position: 'top',
       });
-      return;
     }
-
-    handleCancel();
   };
+
   useEffect(() => {
     if (showModal) {
       const timer = setTimeout(() => {
         setShowModal(false);
-        handleCancel();
-        navigation.navigate(route.main);
+
+        navigation.navigate(route.home);
+
         onClose?.();
       }, 2000);
+
       return () => clearTimeout(timer);
     }
-  }, [showModal, onClose, navigation]);
+  }, [showModal, navigation, onClose]);
+
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.card }]}>
-      {item ? (
+    <SafeAreaView
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.card,
+        },
+      ]}
+    >
+      {isEdit ? (
         <Header text="Update Item" backText="Back" />
       ) : (
         <Header text="Add Item" />
@@ -215,16 +262,18 @@ export default function AddItem({ onClose }: AddItemProps) {
             color={theme.button}
           />
         </View>
+
         <TextInput
           placeholder="Phone"
           value={phone}
-          onChangeText={(text: string) => {
-            const cleaned = text.replace(/[^0-9]/g, '');
-            setPhone(cleaned);
-          }}
-          style={styles.phoneInput}
           maxLength={10}
           keyboardType="number-pad"
+          style={styles.phoneInput}
+          onChangeText={(text: string) => {
+            const cleaned = text.replace(/[^0-9]/g, '');
+
+            setPhone(cleaned);
+          }}
         />
       </View>
 
@@ -237,8 +286,18 @@ export default function AddItem({ onClose }: AddItemProps) {
       />
 
       <View style={styles.favorite}>
-        <Text style={[styles.favText, { color: theme.text }]}>Favorite</Text>
-        <Switch value={!!favorite} onValueChange={setFavorite} />
+        <Text
+          style={[
+            styles.favText,
+            {
+              color: theme.text,
+            },
+          ]}
+        >
+          Favorite
+        </Text>
+
+        <Switch value={favorite} onValueChange={setFavorite} />
       </View>
 
       <View style={styles.buttonContainer}>
@@ -255,32 +314,36 @@ export default function AddItem({ onClose }: AddItemProps) {
           disabled={!isAnyFieldFilled()}
         />
 
-        <Button title="Cancel" onPress={handleCancel} color="gray" />
+        <Button title="Cancel" onPress={resetForm} color="gray" />
       </View>
 
       <CountryPicker
         show={openCountry}
         lang="en"
-        pickerButtonOnPress={items => {
-          setCountryCode(items.dial_code);
+        pickerButtonOnPress={item => {
+          setCountryCode(item.dial_code);
+
           setOpenCountry(false);
         }}
       />
-      <ModalBox
-        item={item}
-        modalVisible={showModal}
-        setModalVisible={setShowModal}
-      />
+
       <DatePicker
         modal
+        mode="date"
         open={openDate}
         date={dob}
-        mode="date"
         onConfirm={date => {
           setDob(date);
+
           setOpenDate(false);
         }}
         onCancel={() => setOpenDate(false)}
+      />
+
+      <ModalBox
+        item={isEdit}
+        modalVisible={showModal}
+        setModalVisible={setShowModal}
       />
     </SafeAreaView>
   );
@@ -303,12 +366,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(10),
     fontFamily: fontFamilies.poppins.Regular,
   },
-  codeButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingRight: 10,
-    height: 50,
-  },
+
   phoneContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -321,18 +379,19 @@ const styles = StyleSheet.create({
     height: 50,
   },
 
+  codeButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingRight: 10,
+    height: 50,
+  },
+
   phoneInput: {
     flex: 1,
     fontSize: 16,
     color: '#333',
     height: '100%',
-  },
-
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 20,
-    justifyContent: 'center',
-    marginTop: 20,
+    fontFamily: fontFamilies.poppins.Regular,
   },
 
   favorite: {
@@ -341,7 +400,15 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 10,
   },
+
   favText: {
     fontFamily: fontFamilies.poppins.Regular,
+  },
+
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 20,
+    marginTop: 20,
   },
 });

@@ -1,9 +1,15 @@
 import {
+  GestureResponderEvent,
   ImageProps,
   StyleProp,
+  TextInputProps,
   TextStyle,
   TouchableOpacityProps,
 } from 'react-native';
+
+// =========================
+// INPUT PROPS
+// =========================
 
 export interface Props {
   placeholder: string;
@@ -16,10 +22,28 @@ export interface Props {
   contextmenu?: boolean;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
 }
+
+// =========================
+// INPUT BOX
+// =========================
+
+export interface InputBoxProps extends TextInputProps {}
+
+// =========================
+// BUTTON
+// =========================
+
 export interface CustomButtonProps extends TouchableOpacityProps {
   title: string;
   textStyle?: StyleProp<TextStyle>;
+  color?: string;
+  disabled?: boolean;
+  onPress?: (event: GestureResponderEvent) => void;
 }
+
+// =========================
+// TOAST
+// =========================
 
 type ToastType = 'success' | 'error' | 'info';
 
@@ -29,32 +53,36 @@ export interface ToastProps {
   message?: string;
 }
 
-import { GestureResponderEvent, TextInputProps } from 'react-native';
-
-export interface InputBoxProps extends TextInputProps {}
-
-export interface CustomButtonProps {
-  title: string;
-  onPress: (event: GestureResponderEvent) => void;
-  color: string;
-  disabled?: boolean;
-}
+// =========================
+// THEME
+// =========================
 
 export interface ThemeContextType {
   dark: boolean;
   toggleTheme: () => void;
 }
 
+// =========================
+// HEADER
+// =========================
+
 export interface HeaderProps {
   text: string;
   backText?: string;
 }
 
+// =========================
+// ADD ITEM
+// =========================
+
 export interface AddItemProps {
-  show?: true;
-  lang?: 'en';
-  pickerButtonOnPress?: (item: any) => void;
+  onClose?: () => void;
 }
+
+// =========================
+// TODO
+// =========================
+
 export interface Todo {
   id: string;
   name: string;
@@ -62,28 +90,48 @@ export interface Todo {
   phone: string;
   countryCode: string;
   dob: string;
-  favorite: string | boolean;
+  favorite: boolean;
 }
 
+// =========================
+// USER TODO DATA
+// =========================
+
+export interface UserTodoData {
+  uid: string;
+  todos: Todo[];
+  saveDraft: Todo[];
+}
+
+// =========================
+// MODAL
+// =========================
+
 export interface ModalBoxProps {
-  item: {};
+  item: boolean;
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
 }
 
-export interface AddItemProps {
-  onClose: () => void;
-}
+// =========================
+// TOTAL BUTTON
+// =========================
+
 export interface TotalButtonProps {
   onPress?: () => void;
   text: string;
 }
+
+// =========================
+// STYLED BUTTON
+// =========================
 
 export interface StyledButtonProps extends TouchableOpacityProps {
   title: string;
   onPress: () => void;
   isSelected?: boolean;
   color?: string;
+
   theme?: {
     background: string;
     text: string;

@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '.././utils/reduxUtil';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { route } from '.././constants/routes';
-
+import auth from '@react-native-firebase/auth';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import fontFamilies from '.././assets/fonts/font';
@@ -15,12 +15,25 @@ import fontFamilies from '.././assets/fonts/font';
 export default function DashBoardCard() {
   const { theme } = useAppTheme();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  const todos = useSelector((state: RootState) => state.user.todos);
-  const saveDraft = useSelector((state: RootState) => state.user.drafts);
-  const totalLength = todos?.length || 0;
-  const favoriteList = todos.filter(item => item.favorite);
-  const favoriteLength = favoriteList?.length || 0;
-  const saveDraftLength = saveDraft?.length || 0;
+  const currentUid = auth().currentUser?.uid;
+
+  const users = useSelector((state: RootState) => state.todo.users) || [];
+  const currentUserData = users.find(user => user.uid === currentUid);
+  const userTodos = currentUserData?.todos || [];
+  const userDrafts = currentUserData?.saveDraft || [];
+
+  const combinedItems = [...userTodos, ...userDrafts];
+  const totalCombinedCount = combinedItems.length;
+  const favoriteCount = combinedItems.filter(item => item.favorite).length;
+  const totalTodosCount = userTodos.length;
+  const draftCount = userDrafts.length;
+
+  const getCombinedPercentage = (count: number) =>
+    totalCombinedCount > 0 ? (count / totalCombinedCount) * 10 : 0;
+  const favoritePercentage = getCombinedPercentage(favoriteCount);
+
+  console.log('favoriteCount', getCombinedPercentage(favoriteCount));
+
   return (
     <View style={styles.cardContainer}>
       <View style={[styles.cardStyle, { backgroundColor: theme.borderColor }]}>
@@ -29,7 +42,7 @@ export default function DashBoardCard() {
         <AnimatedCircularProgress
           size={50}
           width={5}
-          fill={totalLength}
+          fill={getCombinedPercentage(totalTodosCount)}
           tintColor="#040404ff"
           backgroundColor="#fcfcfcff"
           style={styles.progress}
@@ -45,7 +58,7 @@ export default function DashBoardCard() {
         <AnimatedCircularProgress
           size={50}
           width={5}
-          fill={favoriteLength}
+          fill={getCombinedPercentage(favoritePercentage)}
           tintColor="#101010ff"
           backgroundColor="#fcfcfcff"
           style={styles.progress}
@@ -61,7 +74,7 @@ export default function DashBoardCard() {
         <AnimatedCircularProgress
           size={50}
           width={5}
-          fill={saveDraftLength}
+          fill={getCombinedPercentage(draftCount)}
           tintColor="#101010ff"
           backgroundColor="#fcfcfcff"
           style={styles.progress}

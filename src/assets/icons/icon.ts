@@ -11,4 +11,5 @@ export const icon = {
   selected: require('./selected.png'),
   unSelected: require('./unSelected.png'),
   success: require('./success.gif'),
+  noData: require('./noData.png'),
 };
