@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {
   Text,
@@ -34,6 +40,13 @@ import { RootState } from '../../utils/reduxUtil';
 import { Todo } from '../../interfaces/type';
 import { icon } from '../../assets/icons/icon';
 
+// import getFirestore, {
+//   collection,
+//   doc,
+//   getDoc,
+// } from '@react-native-firebase/firestore';
+
+import firestore from '@react-native-firebase/firestore';
 const EmptyListMessage = () => (
   <View style={styles.emptyContainer}>
     <Image source={icon.noData} />
@@ -42,6 +55,8 @@ const EmptyListMessage = () => (
 const Home = () => {
   const user = auth().currentUser;
   const uid = user?.uid || '';
+
+  // const db = getFirestore();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const { dark, toggleTheme, theme } = useAppTheme();
   const [loading, setLoading] = useState(false);
@@ -110,10 +125,37 @@ const Home = () => {
     navigation.navigate(targetRoute);
   };
 
+  const getColl = useCallback(
+    async () => {
+      try {
+        const snapshot = await firestore()
+          .collection('user1')
+          .doc('ajWENjr2yGDyUZR3ARJI')
+          .get();
+
+        console.log('snapshot', snapshot);
+        console.log('exists', snapshot.exists);
+        console.log(snapshot.data());
+      } catch (error) {
+        console.log('error', error);
+      }
+    },
+    [
+      /*db*/
+    ],
+  );
+
+  useEffect(() => {
+    getColl();
+  }, [getColl]);
+
   const renderItem = ({ item }: { item: Todo }) => {
     return <Card item={item} />;
   };
 
+  // if (!uid) {
+  //   return null;
+  // }
   return (
     <GestureHandlerRootView
       style={[

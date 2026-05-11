@@ -134,7 +134,6 @@ const todoSlice = createSlice({
       const draftIndex = state.users[userIndex].saveDraft.findIndex(
         item => item.id === todo.id,
       );
-
       if (draftIndex >= 0) {
         state.users[userIndex].saveDraft = state.users[userIndex].saveDraft.map(
           item => (item.id === todo.id ? todo : item),

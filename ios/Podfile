@@ -13,10 +13,11 @@ use_frameworks! :linkage => :static
 
 target 'FirebaseApp' do
   config = use_native_modules!
-
+  pod 'RNFBFirestore', :path => '../node_modules/@react-native-firebase/firestore'
   use_react_native!(
     :path => config[:reactNativePath],
     :app_path => "#{Pod::Config.instance.installation_root}/.."
+
   )
 
   post_install do |installer|
@@ -30,6 +31,7 @@ target 'FirebaseApp' do
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+        
       end
     end
   end

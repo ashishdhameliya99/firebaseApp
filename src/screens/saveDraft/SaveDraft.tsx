@@ -30,8 +30,9 @@ export default function SaveDraft() {
     state.todo.users.find(item => item.uid === uid),
   );
 
-  console.log('userData', userData);
+  console.log('saveDraft userData', userData);
   const saveDraft = userData?.saveDraft || [];
+  console.log('saveDraft', saveDraft);
   const renderItem: ListRenderItem<Todo> = ({ item }) => <Card item={item} />;
 
   return (

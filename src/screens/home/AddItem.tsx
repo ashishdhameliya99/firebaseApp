@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { addDraft, addTodo, updateTodo } from '../../redux/slice/toDoSlice';
-import { StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { Switch, Text, TextInput, View } from 'react-native';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAppTheme } from '../../hooks/themeContext';
-import { hp, wp } from '../../constants/ResponsiveUI';
 import DatePicker from 'react-native-date-picker';
 import { RootState } from '../../utils/reduxUtil';
 import InputBox from '../../components/InputBox';
@@ -13,7 +12,6 @@ import { string } from '../../constants/string';
 import Button from '../../components/Button';
 import Header from '../../components/Header';
 import Toast from 'react-native-toast-message';
-import { color } from '../../utils/color';
 import {
   ParamListBase,
   useNavigation,
@@ -23,9 +21,10 @@ import { AddItemProps, Todo } from '../../interfaces/type';
 import { route } from '../../constants/routes';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ModalBox from '../../components/ModalBox';
-import fontFamilies from '../../assets/fonts/font';
 import { getUniqueId } from '../../helpers/global';
 import auth from '@react-native-firebase/auth';
+import { errorToast, successToast } from '../../components/Toast';
+import { styles } from './AddItemStyle';
 
 export default function AddItem({ onClose }: AddItemProps) {
   const { theme } = useAppTheme();
@@ -45,6 +44,7 @@ export default function AddItem({ onClose }: AddItemProps) {
   const [openCountry, setOpenCountry] = useState(false);
   const [openDate, setOpenDate] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
   const todos = useSelector((state: RootState) => {
     const user = state.todo.users.find(item => item.uid === uid);
     console.log('state==', state.todo.users);
@@ -76,24 +76,12 @@ export default function AddItem({ onClose }: AddItemProps) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
-      Toast.show({
-        type: 'error',
-        text1: 'Invalid Email',
-        text2: 'Please enter valid email',
-        position: 'top',
-      });
-
+      errorToast('Invalid Email', 'Please enter valid email');
       return false;
     }
 
     if (phone.length !== 10) {
-      Toast.show({
-        type: 'error',
-        text1: 'Invalid Phone',
-        text2: 'Phone must be 10 digits',
-        position: 'top',
-      });
-
+      errorToast('Invalid Phone', 'Phone must be 10 digit');
       return false;
     }
 
@@ -106,13 +94,7 @@ export default function AddItem({ onClose }: AddItemProps) {
     });
 
     if (emailExists) {
-      Toast.show({
-        type: 'error',
-        text1: 'Duplicate Email',
-        text2: 'Email already exists',
-        position: 'top',
-      });
-
+      errorToast('Duplicate email', 'Email already exist');
       return false;
     }
 
@@ -154,13 +136,7 @@ export default function AddItem({ onClose }: AddItemProps) {
             todo: todoData,
           }),
         );
-
-        Toast.show({
-          type: 'success',
-          text1: 'Todo Added',
-          text2: 'New todo added successfully',
-          position: 'top',
-        });
+        successToast('success', 'New todo added successfully');
       } else {
         dispatch(
           updateTodo({
@@ -168,13 +144,7 @@ export default function AddItem({ onClose }: AddItemProps) {
             todo: todoData,
           }),
         );
-
-        Toast.show({
-          type: 'success',
-          text1: 'Todo Updated',
-          text2: 'Todo updated successfully',
-          position: 'top',
-        });
+        successToast('success', 'Todo updated successfully');
       }
       setShowModal(true);
 
@@ -201,12 +171,7 @@ export default function AddItem({ onClose }: AddItemProps) {
 
       resetForm();
     } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Empty Form',
-        text2: 'Please fill at least one field',
-        position: 'top',
-      });
+      errorToast('Empty form', 'Please fill at least one field');
     }
   };
 
@@ -348,67 +313,3 @@ export default function AddItem({ onClose }: AddItemProps) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: wp(20),
-  },
-
-  input: {
-    width: '100%',
-    height: hp(50),
-    borderWidth: 1,
-    borderColor: color.borderColor,
-    borderRadius: 8,
-    paddingHorizontal: wp(15),
-    backgroundColor: color.liteWhite,
-    marginBottom: hp(10),
-    fontFamily: fontFamilies.poppins.Regular,
-  },
-
-  phoneContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: color.borderColor,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginVertical: 10,
-    backgroundColor: color.liteWhite,
-    height: 50,
-  },
-
-  codeButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingRight: 10,
-    height: 50,
-  },
-
-  phoneInput: {
-    flex: 1,
-    fontSize: 16,
-    color: '#333',
-    height: '100%',
-    fontFamily: fontFamilies.poppins.Regular,
-  },
-
-  favorite: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginTop: 10,
-  },
-
-  favText: {
-    fontFamily: fontFamilies.poppins.Regular,
-  },
-
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 20,
-    marginTop: 20,
-  },
-});

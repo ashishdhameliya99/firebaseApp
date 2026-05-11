@@ -129,7 +129,6 @@ export default function Card({ item }: { item: Todo }) {
           navigation.navigate(route.addItem, {
             data: item,
           });
-
           closeMenu();
         }}
         title="Edit"
@@ -156,7 +155,6 @@ export default function Card({ item }: { item: Todo }) {
       <Menu.Item
         onPress={() => {
           handleFavorite();
-
           closeMenu();
         }}
         title={item.favorite ? 'Remove Favorite' : 'Add Favorite'}
