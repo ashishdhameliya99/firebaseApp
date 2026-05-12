@@ -13,7 +13,6 @@ use_frameworks! :linkage => :static
 
 target 'FirebaseApp' do
   config = use_native_modules!
-  pod 'RNFBFirestore', :path => '../node_modules/@react-native-firebase/firestore'
   use_react_native!(
     :path => config[:reactNativePath],
     :app_path => "#{Pod::Config.instance.installation_root}/.."

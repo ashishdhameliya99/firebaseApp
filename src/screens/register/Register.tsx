@@ -17,7 +17,7 @@ import {
 import InputField from '../../components/InputText';
 import { icon } from '../../assets/icons/icon';
 import { styles } from './registerStyle';
-import { auth } from '../../utils/firebaseConfig';
+import { auths } from '../../utils/firebaseConfig';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import {
   AppleAuthProvider,
@@ -26,6 +26,7 @@ import {
 
 import appleAuth from '@invertase/react-native-apple-authentication';
 import { errorToast, successToast } from '../../components/Toast';
+
 GoogleSignin.configure({
   webClientId:
     '1021574425223-j7e9arqqmu85utu85q5cb44279gso0p5.apps.googleusercontent.com',
@@ -56,7 +57,7 @@ const Register = ({ setTab }: any) => {
       setLoading(true);
 
       const response = await createUserWithEmailAndPassword(
-        auth,
+        auths,
         email.trim(),
         password,
       );

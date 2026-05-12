@@ -32,8 +32,6 @@ export default function DashBoardCard() {
     totalCombinedCount > 0 ? (count / totalCombinedCount) * 10 : 0;
   const favoritePercentage = getCombinedPercentage(favoriteCount);
 
-  console.log('favoriteCount', getCombinedPercentage(favoriteCount));
-
   return (
     <View style={styles.cardContainer}>
       <View style={[styles.cardStyle, { backgroundColor: theme.borderColor }]}>

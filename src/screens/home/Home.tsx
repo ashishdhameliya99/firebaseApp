@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import {
   Text,
@@ -39,14 +33,9 @@ import { route } from '../../constants/routes';
 import { RootState } from '../../utils/reduxUtil';
 import { Todo } from '../../interfaces/type';
 import { icon } from '../../assets/icons/icon';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../utils/firebaseConfig';
 
-// import getFirestore, {
-//   collection,
-//   doc,
-//   getDoc,
-// } from '@react-native-firebase/firestore';
-
-import firestore from '@react-native-firebase/firestore';
 const EmptyListMessage = () => (
   <View style={styles.emptyContainer}>
     <Image source={icon.noData} />
@@ -55,8 +44,6 @@ const EmptyListMessage = () => (
 const Home = () => {
   const user = auth().currentUser;
   const uid = user?.uid || '';
-
-  // const db = getFirestore();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const { dark, toggleTheme, theme } = useAppTheme();
   const [loading, setLoading] = useState(false);
@@ -67,11 +54,59 @@ const Home = () => {
     const userData = state.todo.users.find(item => item.uid === uid);
     return userData?.todos || [];
   });
-
-  console.log('TODOS =====>', todos);
   const favoriteTodos = todos.filter(item => item.favorite === true);
   const otherTodos = todos.filter(item => item.favorite !== true);
   const reorderedTodos = [...favoriteTodos, ...otherTodos];
+
+  async function getSingleDocument() {
+    const docRef = collection(db, 'user1');
+    try {
+      await addDoc(docRef, {
+        name: 'test3',
+        age: 22,
+      });
+      console.log('doc updated.....');
+    } catch {
+      console.error('error');
+    }
+  }
+  getSingleDocument();
+  // async function getAllDocuments() {
+  //   const docRef = doc(db, 'user1', 'u4');
+  //   await deleteDoc(docRef);
+  //   console.log('delete doc');
+  // }
+
+  // getAllDocuments();
+
+  // async function getData() {
+  //   const dataRef = doc(db, 'user1', 'u5');
+  //   try {
+  //     await setDoc(dataRef, {
+  //       name: 'user23',
+  //       age: 29,
+  //     });
+  //     console.log('add');
+  //   } catch {
+  //     console.log('error');
+  //   }
+  // }
+  // getData();
+  async function getFilteredDocuments() {
+    const collectionRef = collection(db, 'user1');
+
+    const q = query(collectionRef, where('age', '>', 10));
+    const queryData = await getDocs(q);
+    if (!queryData.empty) {
+      queryData.forEach(docs => {
+        console.log('Document ID:', docs.id, 'Data:', docs.data());
+      });
+    } else {
+      console.log('No matching documents!');
+    }
+  }
+
+  getFilteredDocuments();
   const handleLogout = () => {
     Alert.alert(
       'Logout',
@@ -111,6 +146,7 @@ const Home = () => {
       },
     );
   };
+
   const handleOpen = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -125,37 +161,10 @@ const Home = () => {
     navigation.navigate(targetRoute);
   };
 
-  const getColl = useCallback(
-    async () => {
-      try {
-        const snapshot = await firestore()
-          .collection('user1')
-          .doc('ajWENjr2yGDyUZR3ARJI')
-          .get();
-
-        console.log('snapshot', snapshot);
-        console.log('exists', snapshot.exists);
-        console.log(snapshot.data());
-      } catch (error) {
-        console.log('error', error);
-      }
-    },
-    [
-      /*db*/
-    ],
-  );
-
-  useEffect(() => {
-    getColl();
-  }, [getColl]);
-
   const renderItem = ({ item }: { item: Todo }) => {
     return <Card item={item} />;
   };
 
-  // if (!uid) {
-  //   return null;
-  // }
   return (
     <GestureHandlerRootView
       style={[

@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { addDraft, addTodo, updateTodo } from '../../redux/slice/toDoSlice';
 import { Switch, Text, TextInput, View } from 'react-native';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAppTheme } from '../../hooks/themeContext';
 import DatePicker from 'react-native-date-picker';
+import auth from '@react-native-firebase/auth';
+
+import { addDraft, addTodo } from '../../redux/slice/toDoSlice';
+import { useAppTheme } from '../../hooks/themeContext';
 import { RootState } from '../../utils/reduxUtil';
+
 import InputBox from '../../components/InputBox';
-import { string } from '../../constants/string';
 import Button from '../../components/Button';
 import Header from '../../components/Header';
-import Toast from 'react-native-toast-message';
+import ModalBox from '../../components/ModalBox';
+
+import { string } from '../../constants/string';
+import { route } from '../../constants/routes';
+
+import { AddItemProps, Todo } from '../../interfaces/type';
 import {
   ParamListBase,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { AddItemProps, Todo } from '../../interfaces/type';
-import { route } from '../../constants/routes';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import ModalBox from '../../components/ModalBox';
+import Toast from 'react-native-toast-message';
 import { getUniqueId } from '../../helpers/global';
-import auth from '@react-native-firebase/auth';
 import { errorToast, successToast } from '../../components/Toast';
 import { styles } from './AddItemStyle';
 
@@ -31,10 +35,11 @@ export default function AddItem({ onClose }: AddItemProps) {
   const routes = useRoute();
   const { data } = (routes.params as { data: Todo }) || {};
   const isEdit = !!data;
-  const user = auth().currentUser;
-  const uid = user?.uid ?? '';
   const dispatch = useDispatch();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const user = auth().currentUser;
+  const uid = user?.uid ?? '';
+
   const [name, setName] = useState(data?.name || '');
   const [email, setEmail] = useState(data?.email || '');
   const [phone, setPhone] = useState(data?.phone || '');
@@ -46,9 +51,9 @@ export default function AddItem({ onClose }: AddItemProps) {
   const [showModal, setShowModal] = useState(false);
 
   const todos = useSelector((state: RootState) => {
-    const user = state.todo.users.find(item => item.uid === uid);
-    console.log('state==', state.todo.users);
-    return user?.todos || [];
+    const userData = state.todo.users.find(item => item.uid === uid);
+
+    return userData?.todos || [];
   });
 
   const formatDate = (date: Date) => {
@@ -77,11 +82,13 @@ export default function AddItem({ onClose }: AddItemProps) {
 
     if (!emailRegex.test(email)) {
       errorToast('Invalid Email', 'Please enter valid email');
+
       return false;
     }
 
     if (phone.length !== 10) {
       errorToast('Invalid Phone', 'Phone must be 10 digit');
+
       return false;
     }
 
@@ -94,7 +101,8 @@ export default function AddItem({ onClose }: AddItemProps) {
     });
 
     if (emailExists) {
-      errorToast('Duplicate email', 'Email already exist');
+      errorToast('Duplicate Email', 'Email already exists');
+
       return false;
     }
 
@@ -112,45 +120,39 @@ export default function AddItem({ onClose }: AddItemProps) {
       favorite,
     };
 
-    if (isAllFieldsFilled()) {
+    const completed = isAllFieldsFilled();
+
+    const hasData = isAnyFieldFilled();
+
+    if (!hasData) {
+      errorToast('Empty Form', 'Please fill at least one field');
+
+      return;
+    }
+
+    // COMPLETE TODO
+    if (completed) {
       if (!validateData()) return;
 
-      const isUnchanged =
-        data?.name === todoData.name &&
-        data?.email === todoData.email &&
-        data?.phone === todoData.phone &&
-        data?.countryCode === todoData.countryCode &&
-        data?.dob === todoData.dob &&
-        data?.favorite === todoData.favorite;
+      dispatch(
+        addTodo({
+          uid,
+          todo: todoData,
+        }),
+      );
 
-      if (isEdit && isUnchanged) {
-        navigation.navigate(route.home);
+      successToast(
+        'Success',
+        isEdit ? 'Todo updated successfully' : 'Todo added successfully',
+      );
 
-        return;
-      }
-
-      if (!isEdit) {
-        dispatch(
-          addTodo({
-            uid,
-            todo: todoData,
-          }),
-        );
-        successToast('success', 'New todo added successfully');
-      } else {
-        dispatch(
-          updateTodo({
-            uid,
-            todo: todoData,
-          }),
-        );
-        successToast('success', 'Todo updated successfully');
-      }
       setShowModal(true);
 
-      resetForm();
       navigation.navigate(route.home);
-    } else if (isAnyFieldFilled()) {
+    }
+
+    // SAVE DRAFT
+    else {
       dispatch(
         addDraft({
           uid,
@@ -165,14 +167,12 @@ export default function AddItem({ onClose }: AddItemProps) {
         position: 'top',
       });
 
-      onClose?.();
-
       navigation.navigate(route.saveDraft);
-
-      resetForm();
-    } else {
-      errorToast('Empty form', 'Please fill at least one field');
     }
+
+    resetForm();
+
+    onClose?.();
   };
 
   useEffect(() => {

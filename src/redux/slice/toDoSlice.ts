@@ -1,13 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { Todo, UserTodoData } from '../../interfaces/type';
+
 interface TodoState {
   users: UserTodoData[];
 }
+
 const initialState: TodoState = {
   users: [],
 };
+
 const todoSlice = createSlice({
   name: 'todo',
+
   initialState,
 
   reducers: {
@@ -19,7 +24,7 @@ const todoSlice = createSlice({
       }>,
     ) => {
       const { uid, todo } = action.payload;
-      console.log('uid', uid);
+
       const userIndex = state.users.findIndex(item => item.uid === uid);
 
       if (userIndex === -1) {
@@ -32,82 +37,19 @@ const todoSlice = createSlice({
         return;
       }
 
-      const todoIndex = state.users[userIndex].todos.findIndex(
-        item => item.id === todo.id,
-      );
+      const user = state.users[userIndex];
+
+      // remove to saveDraft
+      user.saveDraft = user.saveDraft.filter(item => item.id !== todo.id);
+
+      // check exist or not
+      const todoIndex = user.todos.findIndex(item => item.id === todo.id);
 
       if (todoIndex >= 0) {
-        state.users[userIndex].todos = state.users[userIndex].todos.map(item =>
-          item.id === todo.id ? todo : item,
-        );
+        user.todos[todoIndex] = todo;
       } else {
-        state.users[userIndex].todos.push(todo);
+        user.todos.push(todo);
       }
-    },
-
-    updateTodo: (
-      state,
-      action: PayloadAction<{
-        uid: string;
-        todo: Todo;
-      }>,
-    ) => {
-      const { uid, todo } = action.payload;
-
-      const user = state.users.find(item => item.uid === uid);
-
-      if (!user) return;
-
-      user.todos = user.todos.map(item => (item.id === todo.id ? todo : item));
-    },
-
-    deleteTodo: (
-      state,
-      action: PayloadAction<{
-        uid: string;
-        id: string;
-      }>,
-    ) => {
-      const { uid, id } = action.payload;
-
-      const user = state.users.find(item => item.uid === uid);
-
-      if (!user) return;
-
-      user.todos = user.todos.filter(item => item.id !== id);
-    },
-
-    toggleFavorite: (
-      state,
-      action: PayloadAction<{
-        uid: string;
-        id: string;
-      }>,
-    ) => {
-      const { uid, id } = action.payload;
-      const userIndex = state.users.findIndex(item => item.uid === uid);
-
-      if (userIndex === -1) {
-        return;
-      }
-      state.users[userIndex].todos = state.users[userIndex].todos.map(todo =>
-        todo.id === id
-          ? {
-              ...todo,
-              favorite: !todo.favorite,
-            }
-          : todo,
-      );
-
-      state.users[userIndex].saveDraft = state.users[userIndex].saveDraft.map(
-        todo =>
-          todo.id === id
-            ? {
-                ...todo,
-                favorite: !todo.favorite,
-              }
-            : todo,
-      );
     },
 
     addDraft: (
@@ -131,16 +73,35 @@ const todoSlice = createSlice({
         return;
       }
 
-      const draftIndex = state.users[userIndex].saveDraft.findIndex(
-        item => item.id === todo.id,
-      );
+      const user = state.users[userIndex];
+
+      // remove to todo
+      user.todos = user.todos.filter(item => item.id !== todo.id);
+
+      // check exist or not
+      const draftIndex = user.saveDraft.findIndex(item => item.id === todo.id);
+
       if (draftIndex >= 0) {
-        state.users[userIndex].saveDraft = state.users[userIndex].saveDraft.map(
-          item => (item.id === todo.id ? todo : item),
-        );
+        user.saveDraft[draftIndex] = todo;
       } else {
-        state.users[userIndex].saveDraft.push(todo);
+        user.saveDraft.push(todo);
       }
+    },
+
+    deleteTodo: (
+      state,
+      action: PayloadAction<{
+        uid: string;
+        id: string;
+      }>,
+    ) => {
+      const { uid, id } = action.payload;
+
+      const user = state.users.find(item => item.uid === uid);
+
+      if (!user) return;
+
+      user.todos = user.todos.filter(item => item.id !== id);
     },
 
     deleteDraft: (
@@ -158,16 +119,74 @@ const todoSlice = createSlice({
 
       user.saveDraft = user.saveDraft.filter(item => item.id !== id);
     },
+
+    toggleFavorite: (
+      state,
+      action: PayloadAction<{
+        uid: string;
+        id: string;
+      }>,
+    ) => {
+      const { uid, id } = action.payload;
+
+      const user = state.users.find(item => item.uid === uid);
+
+      if (!user) return;
+
+      user.todos = user.todos.map(todo =>
+        todo.id === id
+          ? {
+              ...todo,
+              favorite: !todo.favorite,
+            }
+          : todo,
+      );
+
+      user.saveDraft = user.saveDraft.map(todo =>
+        todo.id === id
+          ? {
+              ...todo,
+              favorite: !todo.favorite,
+            }
+          : todo,
+      );
+    },
+    setUserData: (
+      state,
+      action: PayloadAction<{
+        uid: string;
+        todos: Todo[];
+        saveDraft: Todo[];
+      }>,
+    ) => {
+      const { uid, todos, saveDraft } = action.payload;
+
+      const userIndex = state.users.findIndex(item => item.uid === uid);
+
+      if (userIndex >= 0) {
+        state.users[userIndex] = {
+          uid,
+          todos,
+          saveDraft,
+        };
+      } else {
+        state.users.push({
+          uid,
+          todos,
+          saveDraft,
+        });
+      }
+    },
   },
 });
 
 export const {
   addTodo,
-  updateTodo,
-  deleteTodo,
-  toggleFavorite,
   addDraft,
+  deleteTodo,
   deleteDraft,
+  toggleFavorite,
+  setUserData,
 } = todoSlice.actions;
 
 export default todoSlice.reducer;
